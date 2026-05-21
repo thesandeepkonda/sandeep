@@ -1,314 +1,320 @@
-// App.js
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-const App = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [navbarBg, setNavbarBg] = useState('rgba(10, 10, 10, 0.95)');
-  const [terminalText, setTerminalText] = useState('');
-  const [formStatus, setFormStatus] = useState({ show: false, message: '', isError: false });
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-  const lastScrollY = useRef(0);
-  const typewriterTimeout = useRef(null);
+// Custom SVG Icons (same as before, keep them)
+const IconGithub = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48 0-.24-.01-.88-.01-1.73-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.26.1-2.62 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.36.2 2.37.1 2.62.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg>;
+const IconLinkedIn = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451c.979 0 1.771-.773 1.771-1.729V1.729C24 .774 23.204 0 22.225 0z"/></svg>;
+const IconTwitter = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0021.967-12.21c0-.21-.005-.422-.015-.632a9.935 9.935 0 002.46-2.548l-.047-.02z"/></svg>;
+const IconMail = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>;
+const IconCalendar = () => <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V10h14v10zM7 12h4v4H7v-4z"/></svg>;
+const IconChevronRight = () => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>;
+const IconExternalLink = () => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>;
+const IconStar = () => <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>;
+const IconSun = () => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>;
+const IconMoon = () => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>;
+const IconMenu = () => <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
+const IconX = () => <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
 
-  // Terminal JSON data
-  const jsonResponse = `{
-  <span class="term-key">"name"</span>: <span class="term-string">"Sandeep Konda"</span>,
-  <span class="term-key">"roles"</span>: [
-    <span class="term-string">"DevOps Engineer"</span>, 
-    <span class="term-string">"Java Backend Developer"</span>
-  ],
-  <span class="term-key">"expertise"</span>: <span class="term-string">"AWS, Spring Boot, CI/CD"</span>,
-  <span class="term-key">"status"</span>: <span class="term-string">"200 OK"</span>
-}`;
+// Particle Background (Canvas)
+const ParticleBackground = () => {
+  const canvasRef = useRef(null);
+  const particlesRef = useRef([]);
+  const animationRef = useRef(null);
+  const mouseRef = useRef({ x: null, y: null });
 
-  // Typewriter effect for terminal
   useEffect(() => {
-    typewriterTimeout.current = setTimeout(() => {
-      setTerminalText(jsonResponse);
-    }, 1200);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      initParticles();
+    };
+
+    const initParticles = () => {
+      const particles = [];
+      const count = Math.min(100, Math.floor((width * height) / 15000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.8 + 0.6,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          color: `hsla(${Math.random() * 60 + 240}, 80%, 65%, ${Math.random() * 0.4 + 0.2})`
+        });
+      }
+      particlesRef.current = particles;
+    };
+
+    const draw = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      
+      particlesRef.current.forEach(p => {
+        if (mouseRef.current.x && mouseRef.current.y) {
+          const dx = p.x - mouseRef.current.x;
+          const dy = p.y - mouseRef.current.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 100) {
+            const angle = Math.atan2(dy, dx);
+            const force = (100 - dist) / 100;
+            p.vx += Math.cos(angle) * force * 0.2;
+            p.vy += Math.sin(angle) * force * 0.2;
+          }
+        }
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        for (let j = i+1; j < particlesRef.current.length; j++) {
+          const p1 = particlesRef.current[i];
+          const p2 = particlesRef.current[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(120, 120, 255, ${0.12 * (1 - dist/110)})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+      animationRef.current = requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => { mouseRef.current.x = e.clientX; mouseRef.current.y = e.clientY; });
+    window.addEventListener('mouseleave', () => { mouseRef.current.x = null; mouseRef.current.y = null; });
+    resize();
+    draw();
 
     return () => {
-      if (typewriterTimeout.current) clearTimeout(typewriterTimeout.current);
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [jsonResponse]);
-
-  // Scroll handling: progress bar, navbar background, navbar hide/show
-  useEffect(() => {
-    const handleScroll = () => {
-      // Scroll progress
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
-      setScrollProgress(progress);
-      
-      // Navbar background
-      if (window.scrollY > 50) {
-        setNavbarBg('rgba(5, 5, 5, 0.98)');
-      } else {
-        setNavbarBg('rgba(10, 10, 10, 0.95)');
-      }
-
-      // Navbar hide/show on scroll
-      if (window.scrollY > lastScrollY.current && window.scrollY > 100) {
-        setIsNavbarVisible(false);
-      } else {
-        setIsNavbarVisible(true);
-      }
-      lastScrollY.current = window.scrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Smooth scroll to section
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+  return <canvas ref={canvasRef} className="particle-canvas" />;
+};
+
+function App() {
+  const [isDark, setIsDark] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    document.body.classList.toggle('light-theme');
   };
 
-  // Form submission handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    setFormStatus({ show: true, message: 'Processing payload...', isError: false });
+  useEffect(() => {
+    if (isDark) document.body.classList.remove('light-theme');
+    else document.body.classList.add('light-theme');
+  }, [isDark]);
 
-    try {
-      const response = await fetch(form.action, {
-        method: form.method,
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
+  const navItems = ['About', 'Skills', 'Projects', 'Experience', 'Contact'];
+  const skillsData = [
+    { category: "Backend", icon: "☕", items: ["Java", "Spring Boot", "Node.js", "Python", "GraphQL"] },
+    { category: "DevOps & Cloud", icon: "☁️", items: ["AWS", "Docker", "Kubernetes", "Terraform", "Jenkins"] },
+    { category: "Databases", icon: "🗄️", items: ["PostgreSQL", "MongoDB", "Redis", "DynamoDB"] },
+    { category: "Frontend", icon: "🎨", items: ["React", "Next.js", "TypeScript", "Tailwind", "Framer Motion"] },
+    { category: "Security & Tools", icon: "🔒", items: ["OAuth2/JWT", "SonarQube", "Prometheus", "Grafana"] }
+  ];
 
-      if (response.ok) {
-        setFormStatus({ show: true, message: '{ "status": "success", "message": "Payload delivered." }', isError: false });
-        form.reset();
-      } else {
-        setFormStatus({ show: true, message: '{ "status": "error", "code": "try to mail: kondasandeep56@gmail.com" }', isError: true });
-      }
-    } catch (error) {
-      setFormStatus({ show: true, message: '{ "status": "error", "message": "Network Timeout" }', isError: true });
-    }
-  };
+  const projectsData = [
+    { title: "Cloud Native Microservices", description: "Scalable K8s platform with CI/CD, service mesh, handling 50k+ req/sec.", tech: ["K8s", "Spring Boot", "Kafka"], gradient: "from-indigo-500 to-purple-600" },
+    { title: "AI API Gateway", description: "Intelligent gateway with rate limiting, JWT, and ML-based anomaly detection.", tech: ["Spring Cloud Gateway", "Redis", "TensorFlow"], gradient: "from-cyan-500 to-blue-600" },
+    { title: "Serverless E-Commerce", description: "Event-driven AWS architecture handling 1M+ monthly active users.", tech: ["Lambda", "DynamoDB", "EventBridge"], gradient: "from-emerald-500 to-teal-600" },
+    { title: "Real-Time Analytics Pipeline", description: "Processes 10M+ events/day with Kafka, Flink, ClickHouse.", tech: ["Kafka", "Flink", "ClickHouse"], gradient: "from-orange-500 to-red-600" }
+  ];
+
+  const experienceData = [
+    { year: "2023 - Present", role: "Senior DevOps Engineer", company: "TechCorp Inc.", desc: "Led cloud migration to Kubernetes, reduced costs by 35%, improved deployment frequency by 200%." },
+    { year: "2021 - 2023", role: "Java Backend Developer", company: "InnovateSoft", desc: "Developed high-performance REST APIs handling 100k+ concurrent users, implemented OAuth2 security." },
+    { year: "2020 - 2021", role: "Full Stack Developer", company: "StartupHub", desc: "Built React + Spring Boot apps, integrated CI/CD pipelines and automated testing." }
+  ];
+
+  const testimonials = [
+    { name: "Sarah Chen", role: "CTO @ TechCorp", text: "Transformed our infrastructure and mentored the entire team. Exceptional talent.", rating: 5 },
+    { name: "Michael Rodriguez", role: "Lead Architect", text: "Sandeep's expertise saved us months. Highly recommend for any critical project.", rating: 5 }
+  ];
 
   return (
     <div className="app">
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+      <ParticleBackground />
+      <motion.div className="scroll-progress" style={{ scaleX: scrollYProgress }} />
 
-      {/* Navigation */}
-      <nav className={`navbar ${!isNavbarVisible ? 'navbar-hidden' : ''}`} style={{ background: navbarBg }}>
-        <div className="container nav-content">
-          <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="logo">
-            Sandeep<span>Konda</span>
-          </a>
-          <ul className="nav-menu">
-            <li><a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="nav-link">Home</a></li>
-            <li><a href="#architecture" onClick={(e) => { e.preventDefault(); scrollToSection('architecture'); }} className="nav-link">Infra</a></li>
-            <li><a href="#skills" onClick={(e) => { e.preventDefault(); scrollToSection('skills'); }} className="nav-link">Stack</a></li>
-            <li><a href="#projects" onClick={(e) => { e.preventDefault(); scrollToSection('projects'); }} className="nav-link">Deployments</a></li>
-          </ul>
+      <nav className={`navbar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+        <div className="nav-container">
+          <a href="#" className="logo">SK</a>
+          <div className="desktop-nav">
+            {navItems.map(item => <a key={item} href={`#${item.toLowerCase()}`} className="nav-link">{item}</a>)}
+            <button onClick={toggleTheme} className="theme-btn">{isDark ? <IconSun /> : <IconMoon />}</button>
+          </div>
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <IconX /> : <IconMenu />}
+          </button>
         </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mobile-nav">
+              {navItems.map(item => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)}>{item}</a>)}
+              <button onClick={() => { toggleTheme(); setMobileMenuOpen(false); }}>{isDark ? 'Light Mode' : 'Dark Mode'}</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section id="home" className="hero">
-        <div className="container hero-grid">
-          <div className="hero-content">
-            <div className="hero-subtitle">~$ whoami</div>
-            <h1 className="hero-title">Cloud Native<br/>Architect.</h1>
-            <p className="hero-description">
-              Bridging the gap between robust Java backend systems and scalable DevOps pipelines. I automate infrastructure, containerize applications, and engineer serverless APIs.
-            </p>
-            <div className="hero-buttons">
-              <button onClick={() => scrollToSection('projects')} className="btn btn-primary">Init_Projects()</button>
-              <button onClick={() => scrollToSection('contact')} className="btn btn-secondary">git commit --contact</button>
-            </div>
+        <motion.div className="hero-content" style={{ opacity: heroOpacity, scale: heroScale }}>
+          <div className="hero-badge"><span className="pulse-dot"></span> System ready for deployment</div>
+          <h1 className="hero-title"><span>Sandeep Konda</span></h1>
+          <p className="hero-subtitle">Cloud Native Architect & Java Backend Engineer</p>
+          <p className="hero-description">Building scalable, resilient systems that power millions of users. Specialized in DevOps, microservices, and cloud infrastructure.</p>
+          <div className="hero-buttons">
+            <a href="#projects" className="btn-primary">View Projects <IconChevronRight /></a>
+            <a href="#contact" className="btn-secondary">Get in touch</a>
           </div>
-          
-          <div className="terminal">
-            <div className="terminal-header">
-              <div className="terminal-dots">
-                <div className="dot red"></div>
-                <div className="dot yellow"></div>
-                <div className="dot green"></div>
-              </div>
-              <div className="terminal-title">bash - root@aws-prod-server</div>
+        </motion.div>
+        <div className="scroll-down"><div className="scroll-dot"></div></div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="section">
+        <div className="container">
+          <div className="section-header"><h2>About Me</h2><div className="section-line"></div></div>
+          <div className="about-grid">
+            <div className="about-text">
+              <p>I'm a passionate Cloud Native Architect and Java Backend Developer with over 5 years of experience designing and building scalable, high-performance systems. My expertise lies at the intersection of robust backend engineering and modern DevOps practices.</p>
+              <p>I believe in automation, clean code, and building systems that are not just functional but also maintainable and delightful to work with. When I'm not architecting cloud solutions, I contribute to open-source projects and mentor aspiring developers.</p>
+              <a href="#contact" className="link">Let's collaborate <IconChevronRight /></a>
             </div>
-            <div className="terminal-body">
-              <span className="term-command">$ curl -X GET https://api.sandeep.dev/v1/profile</span><br/>
-              <div className="typewriter-output" style={{ marginTop: '10px' }} dangerouslySetInnerHTML={{ __html: terminalText }}></div>
-              <span className="cursor"></span>
-            </div>
+            <div className="about-image"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=700&fit=crop" alt="Workspace" /></div>
           </div>
         </div>
       </section>
 
-      {/* Metrics Banner */}
-      <div className="metrics-banner">
-        <div className="container metrics-grid">
-          <div className="metric">
-            <div className="metric-value"><div className="pulse"></div> 99.99%</div>
-            <div className="metric-label">System Uptime</div>
-          </div>
-          <div className="metric">
-            <div className="metric-value">42ms</div>
-            <div className="metric-label">Avg API Latency</div>
-          </div>
-          <div className="metric">
-            <div className="metric-value">50+</div>
-            <div className="metric-label">Deployments</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Architecture Section */}
-      <section id="architecture" className="section">
+      {/* Skills */}
+      <section id="skills" className="section alt-bg">
         <div className="container">
-          <h2 className="section-title">Deployment <span>Architecture</span></h2>
-          <p className="section-subtitle">Automating the path from local code to highly available cloud infrastructure with built-in security and monitoring.</p>
-          
-          <div className="pipeline-container">
-            <div className="pipeline-header">Standard CI/CD Lifecycle</div>
-            <div className="pipeline-flow">
-              <div className="pipeline-node"><div className="node-icon">💻</div><div className="node-label">1. Code (Git)</div></div>
-              <div className="pipeline-connector"><div className="connector-progress"></div></div>
-              <div className="pipeline-node"><div className="node-icon">🛡️</div><div className="node-label">2. SAST (Sonar)</div></div>
-              <div className="pipeline-connector"><div className="connector-progress" style={{ animationDelay: '0.5s' }}></div></div>
-              <div className="pipeline-node"><div className="node-icon">⚙️</div><div className="node-label">3. Build (Jenkins)</div></div>
-              <div className="pipeline-connector"><div className="connector-progress" style={{ animationDelay: '1s' }}></div></div>
-              <div className="pipeline-node"><div className="node-icon">🐳</div><div className="node-label">4. Image (Docker)</div></div>
-              <div className="pipeline-connector"><div className="connector-progress" style={{ animationDelay: '1.5s' }}></div></div>
-              <div className="pipeline-node"><div className="node-icon">☁️</div><div className="node-label">5. Deploy (K8s/AWS)</div></div>
-              <div className="pipeline-connector"><div className="connector-progress" style={{ animationDelay: '2s' }}></div></div>
-              <div className="pipeline-node" style={{ borderColor: '#60efff' }}><div className="node-icon">📊</div><div className="node-label">6. Monitor (Grafana)</div></div>
-            </div>
-          </div>
-
-          <h2 className="section-title" style={{ marginTop: '4rem' }}>Core <span>Infrastructure</span></h2>
-          <p className="section-subtitle">A high-level view of how my microservices handle incoming traffic, process events, and manage data.</p>
-          
-          <div className="topology-wrapper">
-            <div className="topo-tier">
-              <div className="topo-box accent">🌐 External API Traffic / DNS (Route 53)<div className="topo-line-vertical"></div></div>
-            </div>
-            <div className="topo-tier" style={{ marginTop: '2rem' }}>
-              <div className="topo-box" style={{ width: '60%' }}>🛡️ AWS API Gateway / Load Balancer
-                <div className="topo-line-horizontal"></div>
-                <div className="topo-line-vertical" style={{ left: '20%' }}></div>
-                <div className="topo-line-vertical" style={{ left: '50%' }}></div>
-                <div className="topo-line-vertical" style={{ left: '80%' }}></div>
-              </div>
-            </div>
-            <div className="topo-tier" style={{ marginTop: '2rem' }}>
-              <div className="topo-box">🔒 Auth Service<br/><span style={{ color: '#888', fontSize: '0.75rem' }}>(Spring Security + JWT)</span><div className="topo-line-vertical"></div></div>
-              <div className="topo-box accent">🛒 Core Logic Service<br/><span style={{ color: '#888', fontSize: '0.75rem' }}>(Spring Boot REST API)</span><div className="topo-line-vertical"></div></div>
-              <div className="topo-box">⚡ API Gateway Router<br/><span style={{ color: '#888', fontSize: '0.75rem' }}>(Spring Cloud Gateway)</span><div className="topo-line-vertical"></div></div>
-            </div>
-            <div className="topo-tier" style={{ marginTop: '2rem' }}>
-              <div className="topo-box database">🗄️ Redis Cache</div>
-              <div className="topo-box database">🗄️ PostgreSQL</div>
-              <div className="topo-box accent">🔄 Spring Boot Microservice<br/><span style={{ color: '#888', fontSize: '0.75rem' }}>(Async Event Processor)</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section id="skills" className="section">
-        <div className="container">
-          <h2 className="section-title">Tech <span>Stack</span></h2>
-          <p className="section-subtitle">Core technologies I use to build, secure, and deploy enterprise applications.</p>
+          <div className="section-header"><h2>Tech Stack & Skills</h2><div className="section-line"></div></div>
           <div className="skills-grid">
-            <div className="skill-category"><div className="skill-icon">☕</div><h3>Java Backend</h3><p>Architecting decoupled microservices and production-grade APIs.</p><div className="skill-tags"><span className="skill-tag">Java 17+</span><span className="skill-tag">Spring Boot</span><span className="skill-tag">Microservices</span><span className="skill-tag">Hibernate</span></div></div>
-            <div className="skill-category"><div className="skill-icon">☁️</div><h3>Cloud Infra</h3><p>Designing scalable, fault-tolerant environments on AWS.</p><div className="skill-tags"><span className="skill-tag">AWS Lambda</span><span className="skill-tag">EC2 & VPC</span><span className="skill-tag">S3 & CloudFront</span><span className="skill-tag">EKS</span></div></div>
-            <div className="skill-category"><div className="skill-icon">🐳</div><h3>Container Orchestration</h3><p>Managing isolated deployment environments and clusters.</p><div className="skill-tags"><span className="skill-tag">Docker</span><span className="skill-tag">Kubernetes</span><span className="skill-tag">Helm</span></div></div>
-            <div className="skill-category"><div className="skill-icon">🔄</div><h3>CI/CD & Automation</h3><p>Building zero-downtime deployment pipelines.</p><div className="skill-tags"><span className="skill-tag">Jenkins</span><span className="skill-tag">GitLab CI</span><span className="skill-tag">Terraform</span><span className="skill-tag">Ansible</span></div></div>
-            <div className="skill-category"><div className="skill-icon">🌊</div><h3>API Gateway & Routing</h3><p>Smart routing, rate limiting, and cross-cutting concerns.</p><div className="skill-tags"><span className="skill-tag">Spring Cloud Gateway</span><span className="skill-tag">Netflix Zuul</span><span className="skill-tag">AWS API Gateway</span><span className="skill-tag">NGINX</span></div></div>
-            <div className="skill-category"><div className="skill-icon">🔒</div><h3>Security & IAM</h3><p>Protecting endpoints and managing secrets dynamically.</p><div className="skill-tags"><span className="skill-tag">OAuth2 / JWT</span><span className="skill-tag">HashiCorp Vault</span><span className="skill-tag">SonarQube</span><span className="skill-tag">AWS IAM</span></div></div>
-            <div className="skill-category"><div className="skill-icon">🗄️</div><h3>Database Architecture</h3><p>Managing schema design and multi-tenant logic.</p><div className="skill-tags"><span className="skill-tag">PostgreSQL</span><span className="skill-tag">DynamoDB</span><span className="skill-tag">MongoDB</span><span className="skill-tag">Redis Cache</span></div></div>
-            <div className="skill-category"><div className="skill-icon">📊</div><h3>Observability</h3><p>Ensuring system health and tracing bottlenecks.</p><div className="skill-tags"><span className="skill-tag">Prometheus</span><span className="skill-tag">Grafana</span><span className="skill-tag">ELK Stack</span><span className="skill-tag">Datadog</span></div></div>
+            {skillsData.map((skill, i) => (
+              <div key={skill.category} className="skill-card">
+                <div className="skill-icon">{skill.icon}</div>
+                <h3>{skill.category}</h3>
+                <div className="skill-tags">{skill.items.map(item => <span key={item}>{item}</span>)}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Projects Section */}
+      {/* Projects */}
       <section id="projects" className="section">
         <div className="container">
-          <h2 className="section-title">Production <span>Deployments</span></h2>
-          <p className="section-subtitle">Real-world systems architecture and backend engineering solutions.</p>
+          <div className="section-header"><h2>Featured Projects</h2><div className="section-line"></div></div>
           <div className="projects-grid">
-            <div className="project-card">
-              <div className="project-header"><div className="project-icon">🛒</div><h3 className="project-title">E-Commerce Pricing Engine</h3></div>
-              <div className="project-content"><p className="project-description">Engineered a Spring Boot backend handling complex multi-vendor cart calculations and GST tax compliance. Designed strictly decoupled logic methods allowing frontend and external service teams to easily integrate pricing logic without altering core cart mechanisms or existing coupon services.</p><div className="project-tech"><span className="tech-tag">Java</span><span className="tech-tag">Spring Boot</span><span className="tech-tag">REST APIs</span><span className="tech-tag">PostgreSQL</span></div></div>
-            </div>
-            <div className="project-card">
-              <div className="project-header"><div className="project-icon">🌊</div><h3 className="project-title">API Gateway & Routing Layer</h3></div>
-              <div className="project-content"><p className="project-description">Built a centralized API Gateway using Spring Cloud Gateway to handle request routing, rate limiting, and JWT validation across multiple microservices. Implemented circuit breakers with Resilience4j for fault tolerance and request transformation for legacy service compatibility.</p><div className="project-tech"><span className="tech-tag">Spring Cloud Gateway</span><span className="tech-tag">Resilience4j</span><span className="tech-tag">JWT</span><span className="tech-tag">Docker</span></div></div>
-            </div>
-            <div className="project-card">
-              <div className="project-header"><div className="project-icon">⚡</div><h3 className="project-title">Serverless Cloud Backend</h3></div>
-              <div className="project-content"><p className="project-description">Architected highly scalable backends using AWS serverless components and managed production rollouts for frontend applications. Handled build and update deployment cycles while managing robust IAM roles, S3 bucket policies, and distributing content globally via CloudFront.</p><div className="project-tech"><span className="tech-tag">AWS Lambda</span><span className="tech-tag">DynamoDB</span><span className="tech-tag">AWS API Gateway</span><span className="tech-tag">CloudFront</span></div></div>
-            </div>
-            <div className="project-card">
-              <div className="project-header"><div className="project-icon">☸️</div><h3 className="project-title">K8s Microservices Platform</h3></div>
-              <div className="project-content"><p className="project-description">Built a scalable microservices platform using Kubernetes, featuring automated CI/CD pipelines via Jenkins and comprehensive monitoring using Prometheus & Grafana. Reduced deployment friction and ensured high availability across distributed nodes.</p><div className="project-tech"><span className="tech-tag">Kubernetes</span><span className="tech-tag">Docker</span><span className="tech-tag">Jenkins</span><span className="tech-tag">Grafana</span></div></div>
-            </div>
-            <div className="project-card">
-              <div className="project-header"><div className="project-icon">🔄</div><h3 className="project-title">Async Event Processor</h3></div>
-              <div className="project-content"><p className="project-description">Developed a Spring Boot microservice for async event processing using @Async and CompletableFuture. Handles bulk email notifications, report generation, and background data synchronization without blocking main request threads.</p><div className="project-tech"><span className="tech-tag">Spring Boot</span><span className="tech-tag">@Async</span><span className="tech-tag">CompletableFuture</span><span className="tech-tag">Redis</span></div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="section">
-        <div className="container">
-          <h2 className="section-title">Establish <span>Connection</span></h2>
-          <div className="contact-content">
-            <div>
-              <h3 style={{ color: '#fff', marginBottom: '20px' }}>// Open Ports</h3>
-              <p style={{ color: '#888', marginBottom: '30px' }}>Looking to architect a new backend, optimize your cloud infrastructure, or automate your pipelines? Send a payload.</p>
-              <div style={{ fontFamily: "'Fira Code', monospace", color: '#aaa', lineHeight: 2 }}>
-                <div><span style={{ color: '#00ff87' }}>email:</span> kondasandeep56@gmail.com</div>
-                <div><span style={{ color: '#00ff87' }}>location:</span> Hyderabad, TS, India</div>
-                <div><span style={{ color: '#00ff87' }}>status:</span> Available for opportunities</div>
+            {projectsData.map((project, i) => (
+              <div key={project.title} className="project-card">
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="project-tech">{project.tech.map(t => <span key={t}>{t}</span>)}</div>
+                <a href="#" className="project-link">Learn more <IconExternalLink /></a>
               </div>
-              <a href="https://wa.me/+918008806996" className="whatsapp-button" target="_blank" rel="noopener noreferrer">[ Execute WhatsApp Chat ]</a>
-            </div>
-            <div className="contact-form">
-              <form action="https://formspree.io/f/xbjnqzzk" method="POST" onSubmit={handleSubmit}>
-                <div className="form-group"><label htmlFor="name">req.body.name</label><input type="text" id="name" name="name" required /></div>
-                <div className="form-group"><label htmlFor="email">req.body.email</label><input type="email" id="email" name="email" required /></div>
-                <div className="form-group"><label htmlFor="message">req.body.message</label><textarea id="message" name="message" rows="4" required></textarea></div>
-                <button type="submit" className="submit-btn">POST /api/message</button>
-                {formStatus.show && (
-                  <div id="statusMessage" style={{ marginTop: '15px', fontFamily: "'Fira Code', monospace", fontSize: '0.85rem', color: formStatus.isError ? '#ff5f56' : '#00ff87' }}>
-                    {formStatus.message}
-                  </div>
-                )}
-              </form>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="footer">
+      {/* Experience */}
+      <section id="experience" className="section alt-bg">
         <div className="container">
-          <p>System maintained by Sandeep Konda © 2025</p>
-          <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
-            <a href="https://github.com/thesandeepkonda" target="_blank" rel="noopener noreferrer" style={{ color: '#888', textDecoration: 'none' }}>GitHub</a>
-            <a href="https://www.linkedin.com/in/sandeepkonda07" target="_blank" rel="noopener noreferrer" style={{ color: '#888', textDecoration: 'none' }}>LinkedIn</a>
+          <div className="section-header"><h2>Experience</h2><div className="section-line"></div></div>
+          <div className="timeline">
+            {experienceData.map((exp, i) => (
+              <div key={exp.year} className="timeline-item">
+                <div className="timeline-year"><IconCalendar /> {exp.year}</div>
+                <h3>{exp.role}</h3>
+                <div className="timeline-company">{exp.company}</div>
+                <p>{exp.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="section">
+        <div className="container">
+          <div className="section-header"><h2>Testimonials</h2><div className="section-line"></div></div>
+          <div className="testimonials-grid">
+            {testimonials.map((t, i) => (
+              <div key={t.name} className="testimonial-card">
+                <div className="stars">{[...Array(t.rating)].map((_, i) => <IconStar key={i} />)}</div>
+                <p>"{t.text}"</p>
+                <h4>{t.name}</h4>
+                <span>{t.role}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="section alt-bg">
+        <div className="container">
+          <div className="section-header"><h2>Let's Connect</h2><div className="section-line"></div></div>
+          <div className="contact-grid">
+            <div className="contact-info">
+              <p>Interested in collaborating or have a project in mind? I'm always open to discussing new opportunities.</p>
+              <div className="contact-details"><IconMail /> kondasandeep56@gmail.com</div>
+              <div className="contact-details"><IconCalendar /> Hyderabad, India</div>
+              <div className="social-links">
+                <a href="https://github.com/thesandeepkonda"><IconGithub /></a>
+                <a href="https://www.linkedin.com/in/sandeepkonda07"><IconLinkedIn /></a>
+                <a href="#"><IconTwitter /></a>
+              </div>
+            </div>
+            <form action="https://formspree.io/f/xbjnqzzk" method="POST" className="contact-form">
+              <input type="text" name="name" placeholder="Your name" required />
+              <input type="email" name="email" placeholder="Your email" required />
+              <input type="text" name="subject" placeholder="Subject" />
+              <textarea name="message" rows="5" placeholder="Your message" required></textarea>
+              <button type="submit">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer>© 2025 Sandeep Konda. Built with React, Framer Motion, and CSS.</footer>
     </div>
   );
-};
+}
 
 export default App;
