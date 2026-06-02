@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Calendar, User, Clock, ArrowRight, Tag, Heart, Eye } from 'lucide-react';
+import { Search, Calendar, User, Clock, ArrowRight, Heart, Eye } from 'lucide-react';
 
 // Canvas Network Component
 const CanvasNetwork = () => {

@@ -121,12 +121,6 @@ const CanvasNetwork = () => {
   return <canvas ref={canvasRef} className="canvas-bg" />;
 };
 
-export default function HomePage() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [rotatingTitle, setRotatingTitle] = useState('DevOps Engineer');
-  const [titleIndex, setTitleIndex] = useState(0);
-  
   const fullName = 'Sandeep Konda';
   const TITLES = [
     'DevOps Engineer',
@@ -135,6 +129,13 @@ export default function HomePage() {
     'CI/CD Specialist',
     'System Designer'
   ];
+export default function HomePage() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [rotatingTitle, setRotatingTitle] = useState('DevOps Engineer');
+  const [titleIndex, setTitleIndex] = useState(0);
+  
+
 
   // Typing animation for name
   useEffect(() => {

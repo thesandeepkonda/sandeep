@@ -33,6 +33,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        # Temporary if ESLint warnings keep blocking:
+        # run: CI=false npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -40,10 +42,14 @@ jobs:
           path: build
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
