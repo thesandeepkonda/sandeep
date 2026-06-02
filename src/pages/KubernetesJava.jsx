@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Tag, Copy, Check, Clock } from 'lucide-react';
 import CommentSection from '../components/CommentSection';
+import React, { useState, useEffect } from "react";
 
 // Canvas Network Component (same as above)
 const CanvasNetwork = () => { /* ... include the CanvasNetwork code ... */ };

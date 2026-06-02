@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
 // Canvas Network Component
 const CanvasNetwork = () => {
   const canvasRef = useRef(null);
