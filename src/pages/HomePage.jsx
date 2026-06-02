@@ -128,7 +128,7 @@ export default function HomePage() {
   const [titleIndex, setTitleIndex] = useState(0);
   
   const fullName = 'Sandeep Konda';
-  const titles = [
+  const TITLES = [
     'DevOps Engineer',
     'Java Backend Architect',
     'Cloud Native Developer',
@@ -153,14 +153,14 @@ export default function HomePage() {
   // Rotating titles animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setTitleIndex((prev) => (prev + 1) % titles.length);
+      setTitleIndex((prev) => (prev + 1) % TITLES.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [titles.length]);
+  }, []);
 
   useEffect(() => {
-    setRotatingTitle(titles[titleIndex]);
-  }, [titleIndex, titles]);
+    setRotatingTitle(TITLES[titleIndex]);
+ }, [titleIndex]);
 
   useEffect(() => {
     const handleScroll = () => {

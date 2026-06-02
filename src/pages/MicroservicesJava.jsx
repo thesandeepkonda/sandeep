@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Tag, Copy, Check, Clock } from 'lucide-react';
 import CommentSection from '../components/CommentSection';
