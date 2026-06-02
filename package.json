@@ -1,6 +1,7 @@
 {
   "name": "sandeep",
   "version": "0.1.0",
+  "homepage": "https://www.sandeepkonda.in",
   "private": true,
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.0"
   }
