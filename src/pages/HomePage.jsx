@@ -156,11 +156,11 @@ export default function HomePage() {
       setTitleIndex((prev) => (prev + 1) % titles.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [titles.length]);
 
   useEffect(() => {
     setRotatingTitle(titles[titleIndex]);
-  }, [titleIndex]);
+  }, [titleIndex, titles]);
 
   useEffect(() => {
     const handleScroll = () => {

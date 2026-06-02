@@ -257,7 +257,7 @@ export default function Contact() {
                   <span style={{ fontSize: '18px' }}>🔗</span>
                   <span style={{ fontSize: '13px', color: '#fff' }}>LinkedIn</span>
                 </a>
-                <a href="#" 
+                <a href="https://twitter.com/thesandeepkonda" 
                   className="ms-card" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
                   onMouseEnter={(e) => e.currentTarget.style.borderColor = '#00ffaa'}
                   onMouseLeave={(e) => e.currentTarget.style.borderColor = '#00ffaa44'}>

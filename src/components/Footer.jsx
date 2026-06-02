@@ -49,7 +49,7 @@ export default function Footer() {
               }}>
                 <span style={{ fontSize: '18px' }}>🔗</span>
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" style={{ 
+              <a href="https://twitter.com/thesandeepkonda" target="_blank" rel="noopener noreferrer" style={{ 
                 padding: '8px', 
                 background: 'rgba(255,255,255,0.05)', 
                 borderRadius: '8px',
@@ -58,6 +58,7 @@ export default function Footer() {
               }}>
                 <span style={{ fontSize: '18px' }}>🐦</span>
               </a>
+
               <a href="mailto:kondasandeep56@gmail.com" style={{ 
                 padding: '8px', 
                 background: 'rgba(255,255,255,0.05)', 
