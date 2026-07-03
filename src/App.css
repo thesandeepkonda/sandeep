@@ -159,4 +159,10 @@ body {
   .section-title {
     font-size: 2rem;
   }
+
+  
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
 }
