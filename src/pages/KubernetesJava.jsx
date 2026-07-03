@@ -1,10 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Copy, Check, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft, Calendar, User, Tag, Copy, Check, Clock, Terminal
+} from 'lucide-react';
 import CommentSection from '../components/CommentSection';
-import React, { useState, useEffect } from "react";
-
-// Canvas Network Component (same as above)
-const CanvasNetwork = () => { /* ... include the CanvasNetwork code ... */ };
 
 export default function DevOpsPipeline() {
   const navigate = useNavigate();
@@ -44,62 +44,121 @@ export default function DevOpsPipeline() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
+  const staggerContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.15 } },
+  };
+
   return (
-    <div className="app">
-      <CanvasNetwork />
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+    <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
+      {/* Scroll Progress Indicator */}
+      <div className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 z-50 transition-all duration-75" style={{ width: `${scrollProgress}%` }} />
 
-      <div className="container" style={{ paddingTop: '100px', maxWidth: '900px' }}>
-        <button onClick={() => navigate('/blogs')} style={{ background: 'none', border: 'none', color: '#00ffaa', cursor: 'pointer', fontFamily: "'Fira Code', monospace", fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '30px' }}>
-          <ArrowLeft size={16} /> Back to Blogs
-        </button>
+      <div className="max-w-4xl mx-auto px-6">
+        
+        {/* ---- BACK BUTTON ---- */}
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          onClick={() => navigate('/blogs')}
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-6 font-medium"
+        >
+          <ArrowLeft size={18} /> Back to Blogs
+        </motion.button>
 
-        <div className="mb-8">
-          <div className="hero-subtitle" style={{ color: '#00ffaa', fontFamily: "'Fira Code', monospace", marginBottom: '10px' }}>$ cat devops-pipeline.md</div>
-          <h1 className="hero-title" style={{ fontSize: '3rem' }}>Production CI/CD Pipeline</h1>
-          <p className="hero-description">From Git commit to Kubernetes - build a complete CI/CD pipeline that automatically builds, tests, and deploys Java applications.</p>
-          
-          <div className="live-status-panel">
-            <div className="status-header">📄 ARTICLE METADATA</div>
-            <div className="status-items">
-              <span><Calendar size={12} /> May 28, 2026</span>
-              <span><User size={12} /> Sandeep Konda</span>
-              <span><Clock size={12} /> 15 min read</span>
-            </div>
+        {/* ---- HEADER ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-4 border border-blue-200 shadow-sm">
+            <Terminal size={16} /> $ cat devops-pipeline.md
           </div>
-        </div>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">
+            Production CI/CD Pipeline
+          </h1>
+          <p className="text-slate-600 text-lg leading-relaxed mb-6">
+            From Git commit to Kubernetes - build a complete CI/CD pipeline that automatically builds, tests, and deploys Java applications.
+          </p>
 
-        <div className="java-backend-showcase" style={{ padding: '40px' }}>
-          <div className="code-showcase">
-            <div className="code-tabs"><div className="code-tab active">README.md</div></div>
-            <div className="code-block" style={{ padding: '30px' }}>
-              <div style={{ color: '#aaffdd', lineHeight: '1.8' }}>
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+            <span className="flex items-center gap-1.5"><Calendar size={14} /> May 28, 2026</span>
+            <span className="flex items-center gap-1.5"><User size={14} /> Sandeep Konda</span>
+            <span className="flex items-center gap-1.5"><Clock size={14} /> 15 min read</span>
+          </div>
+        </motion.section>
+
+        {/* ---- MAIN CONTENT ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={staggerContainer}
+          className="space-y-8"
+        >
+          {/* Content Card */}
+          <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="p-8 md:p-10">
+              <div className="prose prose-slate max-w-none">
                 
-                <div className="live-status-panel" style={{ margin: '0 0 30px 0' }}>
-                  <div className="status-header">🚀 REAL PIPELINE STATS</div>
-                  <div className="status-items">50+ builds daily | 4 min build time | 90 sec deployment</div>
-                </div>
-
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', marginBottom: '15px' }}>Pipeline Architecture</h2>
-                <div className="microservices-grid" style={{ marginBottom: '30px' }}>
-                  <div className="ms-card">📝 Git Push</div>
-                  <div className="ms-card">🔨 Build & Test</div>
-                  <div className="ms-card">🐳 Docker Build</div>
-                  <div className="ms-card">📦 Push Registry</div>
-                  <div className="ms-card">☸️ Deploy to K8s</div>
-                </div>
-
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Jenkins Pipeline</h2>
-                
-                <div className="terminal" style={{ margin: '20px 0' }}>
-                  <div className="terminal-header">
-                    <div className="terminal-dots"><div className="dot red"></div><div className="dot yellow"></div><div className="dot green"></div></div>
-                    <div className="terminal-title">Jenkinsfile</div>
-                    <button onClick={copyCode} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>{copied ? <Check size={14} /> : <Copy size={14} />}</button>
+                {/* Pipeline Stats */}
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🚀</span> REAL PIPELINE STATS
                   </div>
-                  <div className="terminal-body">
-                    <pre style={{ color: '#d0ffd0', margin: 0, fontSize: '12px', fontFamily: "'Fira Code', monospace" }}>{`pipeline {
+                  <div className="flex flex-wrap gap-4 text-slate-700 text-sm">
+                    <span>50+ builds daily</span>
+                    <span>4 min build time</span>
+                    <span>90 sec deployment</span>
+                  </div>
+                </div>
+
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Pipeline Architecture</h2>
+                
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                  {[
+                    { label: "📝 Git Push" },
+                    { label: "🔨 Build & Test" },
+                    { label: "🐳 Docker Build" },
+                    { label: "📦 Push Registry" },
+                    { label: "☸️ Deploy to K8s" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+                      <div className="font-semibold text-slate-700 text-sm">{item.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Jenkins Pipeline</h2>
+                
+                {/* Code Block */}
+                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg mb-6">
+                  <div className="flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-red-500" />
+                      <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <span className="w-3 h-3 rounded-full bg-green-500" />
+                    </div>
+                    <span className="text-xs text-slate-400 font-mono">Jenkinsfile</span>
+                    <button
+                      onClick={copyCode}
+                      className="text-slate-400 hover:text-white transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
+                    </button>
+                  </div>
+                  <pre className="p-4 text-sm text-slate-300 font-mono overflow-x-auto">
+{`pipeline {
     agent any
     stages {
         stage('Checkout') {
@@ -115,38 +174,69 @@ export default function DevOpsPipeline() {
             steps { sh 'kubectl set image deployment/backend-service backend-service=myapp/backend-service:latest' }
         }
     }
-}`}</pre>
+}`}
+                  </pre>
+                </div>
+
+                {/* Pro Tip */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">💡</span> PRO TIP
                   </div>
+                  <p className="text-slate-700 text-sm">
+                    Implement parallel stages for build and test to reduce pipeline execution time.
+                  </p>
                 </div>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">💡 PRO TIP</div>
-                  <div className="status-items">Implement parallel stages for build and test to reduce pipeline execution time.</div>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Best Practices</h2>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    { label: "✅ Security Scanning" },
+                    { label: "✅ Blue-Green Deployments" },
+                    { label: "✅ Canary Releases" },
+                    { label: "✅ Rollback Strategies" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+                      <div className="font-semibold text-slate-700 text-sm">{item.label}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Best Practices</h2>
-                <div className="microservices-grid">
-                  <div className="ms-card">✅ Security Scanning</div>
-                  <div className="ms-card">✅ Blue-Green Deployments</div>
-                  <div className="ms-card">✅ Canary Releases</div>
-                  <div className="ms-card">✅ Rollback Strategies</div>
+                {/* Key Takeaway */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🎯</span> KEY TAKEAWAY
+                  </div>
+                  <p className="text-slate-700 text-sm">
+                    A good CI/CD pipeline is invisible. Developers push code, and it's automatically in production within minutes.
+                  </p>
                 </div>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">🎯 KEY TAKEAWAY</div>
-                  <div className="status-items">A good CI/CD pipeline is invisible. Developers push code, and it's automatically in production within minutes.</div>
-                </div>
               </div>
             </div>
-          </div>
 
-          <div className="microservices-grid" style={{ marginTop: '30px' }}>
-            <div className="ms-card" style={{ background: 'rgba(0, 255, 170, 0.1)' }}><Tag size={16} style={{ color: '#00ffaa' }} /> <span style={{ color: '#00ffaa' }}>TAGS</span></div>
-            {['Jenkins', 'GitHub Actions', 'Kubernetes', 'Terraform', 'ArgoCD', 'Docker'].map(tag => (<div key={tag} className="ms-card"><span>{tag}</span></div>))}
-          </div>
+            {/* Tags */}
+            <div className="border-t border-slate-200 p-6 bg-slate-50">
+              <div className="flex items-center gap-3 mb-3">
+                <Tag size={16} className="text-blue-600" />
+                <span className="text-sm font-bold text-slate-700">TAGS</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['Jenkins', 'GitHub Actions', 'Kubernetes', 'Terraform', 'ArgoCD', 'Docker'].map(tag => (
+                  <span key={tag} className="px-3 py-1 bg-white border border-slate-200 text-slate-600 text-xs font-semibold rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-          <CommentSection postId={3} />
-        </div>
+          {/* ---- COMMENTS ---- */}
+          <motion.div variants={fadeUp}>
+            <CommentSection postId={3} />
+          </motion.div>
+        </motion.section>
       </div>
     </div>
   );

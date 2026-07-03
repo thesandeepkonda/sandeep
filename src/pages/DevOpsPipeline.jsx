@@ -1,128 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Copy, Check, GitBranch, Settings, Rocket, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft, Calendar, User, Tag, Copy, Check, GitBranch, Settings, Rocket, Clock, Terminal
+} from 'lucide-react';
 import CommentSection from '../components/CommentSection';
-
-// Canvas Network Component
-const CanvasNetwork = () => {
-  const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
-  const animationRef = useRef(null);
-  const mouseRef = useRef({ x: null, y: null, radius: 200 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    const initParticles = () => {
-      const particles = [];
-      const numParticles = Math.min(120, Math.floor((width * height) / 9000));
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 2.2 + 1.0,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          baseColor: `hsl(${Math.random() * 60 + 150}, 85%, 60%)`,
-        });
-      }
-      particlesRef.current = particles;
-    };
-
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initParticles();
-    };
-
-    const draw = () => {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.globalAlpha = 0.7;
-      
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            const opacity = (1 - distance / 150) * 0.4;
-            ctx.strokeStyle = `rgba(0, 255, 200, ${opacity})`;
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-          }
-        }
-      }
-      
-      particlesRef.current.forEach(p => {
-        if (mouseRef.current.x && mouseRef.current.y) {
-          const dxMouse = p.x - mouseRef.current.x;
-          const dyMouse = p.y - mouseRef.current.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < mouseRef.current.radius) {
-            const force = (mouseRef.current.radius - distMouse) / mouseRef.current.radius;
-            p.vx += dxMouse * 0.002 * force;
-            p.vy += dyMouse * 0.002 * force;
-          }
-        }
-        
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-        
-        p.vx *= 0.99;
-        p.vy *= 0.99;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.baseColor;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00ffcc';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-      
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    const onMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-    const onMouseLeave = () => {
-      mouseRef.current.x = null;
-      mouseRef.current.y = null;
-    };
-    
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
-    resize();
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseleave', onMouseLeave);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return <canvas ref={canvasRef} className="canvas-bg" />;
-};
 
 export default function DevOpsPipeline() {
   const navigate = useNavigate();
@@ -307,167 +189,209 @@ jobs:
         kubectl rollout status deployment/backend-service`
   };
 
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
+  const staggerContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.15 } },
+  };
+
   return (
-    <div className="app">
-      <CanvasNetwork />
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+    <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
+      {/* Scroll Progress Indicator */}
+      <div className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 z-50 transition-all duration-75" style={{ width: `${scrollProgress}%` }} />
 
-      <div className="container" style={{ paddingTop: '100px', maxWidth: '1000px' }}>
+      <div className="max-w-4xl mx-auto px-6">
         
-        {/* Back Button */}
-        <button
+        {/* ---- BACK BUTTON ---- */}
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
           onClick={() => navigate('/blogs')}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#00ffaa',
-            cursor: 'pointer',
-            fontFamily: "'Fira Code', monospace",
-            fontSize: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '30px'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#80ffff'}
-          onMouseLeave={(e) => e.currentTarget.style.color = '#00ffaa'}
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-6 font-medium"
         >
-          <ArrowLeft size={16} /> Back to Blogs
-        </button>
+          <ArrowLeft size={18} /> Back to Blogs
+        </motion.button>
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="hero-subtitle" style={{ color: '#00ffaa', fontFamily: "'Fira Code', monospace", marginBottom: '10px' }}>
-            $ cat devops-pipeline.md
+        {/* ---- HEADER ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-4 border border-blue-200 shadow-sm">
+            <Terminal size={16} /> $ cat devops-pipeline.md
           </div>
-          <h1 className="hero-title" style={{ fontSize: '3rem' }}>Production CI/CD Pipeline: From Git Commit to Kubernetes</h1>
-          <p className="hero-description">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">
+            Production CI/CD Pipeline: From Git Commit to Kubernetes
+          </h1>
+          <p className="text-slate-600 text-lg leading-relaxed mb-6">
             Learn how to build a complete CI/CD pipeline that automatically builds, tests, and deploys Java applications 
             to Kubernetes. Real-world configuration from my 2+ years of DevOps experience.
           </p>
-          
-          <div className="live-status-panel">
-            <div className="status-header">📄 ARTICLE METADATA</div>
-            <div className="status-items">
-              <span><Calendar size={12} /> May 28, 2026</span>
-              <span><User size={12} /> Sandeep Konda</span>
-              <span><Clock size={12} /> 15 min read</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Content */}
-        <div className="java-backend-showcase" style={{ padding: '40px' }}>
-          <div className="code-showcase">
-            <div className="code-tabs">
-              <div className="code-tab active">README.md</div>
-              <div className="code-tab">Jenkinsfile</div>
-              <div className="code-tab">.github/workflows/deploy.yml</div>
-            </div>
-            <div className="code-block" style={{ padding: '30px' }}>
-              <div style={{ color: '#aaffdd', lineHeight: '1.8' }}>
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+            <span className="flex items-center gap-1.5"><Calendar size={14} /> May 28, 2026</span>
+            <span className="flex items-center gap-1.5"><User size={14} /> Sandeep Konda</span>
+            <span className="flex items-center gap-1.5"><Clock size={14} /> 15 min read</span>
+          </div>
+        </motion.section>
+
+        {/* ---- MAIN CONTENT ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={staggerContainer}
+          className="space-y-8"
+        >
+          {/* Content Card */}
+          <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="p-8 md:p-10">
+              <div className="prose prose-slate max-w-none">
                 
-                <div className="live-status-panel" style={{ margin: '0 0 30px 0' }}>
-                  <div className="status-header">🚀 REAL PIPELINE STATS</div>
-                  <div className="status-items">
+                {/* Pipeline Stats */}
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🚀</span> REAL PIPELINE STATS
+                  </div>
+                  <div className="flex flex-wrap gap-4 text-slate-700 text-sm">
                     <span>50+ builds daily</span>
                     <span>4 min build time</span>
                     <span>90 sec deployment</span>
                   </div>
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', marginBottom: '15px' }}>The Pipeline Architecture</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">The Pipeline Architecture</h2>
                 
-                <div className="microservices-grid" style={{ marginBottom: '30px' }}>
-                  <div className="ms-card"><GitBranch size={20} /> Git Push</div>
-                  <div className="ms-card"><Settings size={20} /> Build & Test</div>
-                  <div className="ms-card"><Copy size={20} /> Docker Build</div>
-                  <div className="ms-card"><Rocket size={20} /> Deploy to K8s</div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    { icon: <GitBranch size={20} />, label: "Git Push" },
+                    { icon: <Settings size={20} />, label: "Build & Test" },
+                    { icon: <Copy size={20} />, label: "Docker Build" },
+                    { icon: <Rocket size={20} />, label: "Deploy to K8s" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+                      <div className="text-blue-600 mb-1">{item.icon}</div>
+                      <div className="font-semibold text-slate-700 text-sm">{item.label}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Jenkins Pipeline (Declarative)</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Jenkins Pipeline (Declarative)</h2>
                 
-                <div className="terminal" style={{ margin: '20px 0' }}>
-                  <div className="terminal-header">
-                    <div className="terminal-dots">
-                      <div className="dot red"></div>
-                      <div className="dot yellow"></div>
-                      <div className="dot green"></div>
+                {/* Jenkins Code Block */}
+                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg mb-6">
+                  <div className="flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-red-500" />
+                      <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <span className="w-3 h-3 rounded-full bg-green-500" />
                     </div>
-                    <div className="terminal-title">Jenkinsfile</div>
-                    <button onClick={() => copyCode('jenkins', codeSnippets.jenkinsfile)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>
-                      {copied.jenkins ? <Check size={14} /> : <Copy size={14} />}
+                    <span className="text-xs text-slate-400 font-mono">Jenkinsfile</span>
+                    <button
+                      onClick={() => copyCode('jenkins', codeSnippets.jenkinsfile)}
+                      className="text-slate-400 hover:text-white transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {copied.jenkins ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                     </button>
                   </div>
-                  <div className="terminal-body">
-                    <pre style={{ color: '#d0ffd0', margin: 0, fontSize: '11px', fontFamily: "'Fira Code', monospace", overflow: 'auto', maxHeight: '400px' }}>
-                      {codeSnippets.jenkinsfile}
-                    </pre>
-                  </div>
+                  <pre className="p-4 text-sm text-slate-300 font-mono overflow-x-auto max-h-[400px]">
+                    {codeSnippets.jenkinsfile}
+                  </pre>
                 </div>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">💡 PRO TIP</div>
-                  <div className="status-items">
+                {/* Pro Tip */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">💡</span> PRO TIP
+                  </div>
+                  <p className="text-slate-700 text-sm">
                     Implement parallel stages for build and test to reduce pipeline execution time. 
                     We reduced our pipeline time from 12 minutes to 4 minutes using parallel execution.
-                  </div>
+                  </p>
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>GitHub Actions Workflow</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">GitHub Actions Workflow</h2>
                 
-                <div className="terminal" style={{ margin: '20px 0' }}>
-                  <div className="terminal-header">
-                    <div className="terminal-dots">
-                      <div className="dot red"></div>
-                      <div className="dot yellow"></div>
-                      <div className="dot green"></div>
+                {/* GitHub Actions Code Block */}
+                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg mb-6">
+                  <div className="flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-red-500" />
+                      <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <span className="w-3 h-3 rounded-full bg-green-500" />
                     </div>
-                    <div className="terminal-title">.github/workflows/deploy.yml</div>
-                    <button onClick={() => copyCode('github', codeSnippets.githubActions)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>
-                      {copied.github ? <Check size={14} /> : <Copy size={14} />}
+                    <span className="text-xs text-slate-400 font-mono">.github/workflows/deploy.yml</span>
+                    <button
+                      onClick={() => copyCode('github', codeSnippets.githubActions)}
+                      className="text-slate-400 hover:text-white transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {copied.github ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                     </button>
                   </div>
-                  <div className="terminal-body">
-                    <pre style={{ color: '#d0ffd0', margin: 0, fontSize: '11px', fontFamily: "'Fira Code', monospace", overflow: 'auto', maxHeight: '400px' }}>
-                      {codeSnippets.githubActions}
-                    </pre>
-                  </div>
+                  <pre className="p-4 text-sm text-slate-300 font-mono overflow-x-auto max-h-[400px]">
+                    {codeSnippets.githubActions}
+                  </pre>
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Best Practices from Production</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Best Practices from Production</h2>
                 
-                <div className="microservices-grid" style={{ marginBottom: '30px' }}>
-                  <div className="ms-card">✅ Security Scanning</div>
-                  <div className="ms-card">✅ Blue-Green Deployments</div>
-                  <div className="ms-card">✅ Canary Releases</div>
-                  <div className="ms-card">✅ Rollback Strategies</div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    { label: "✅ Security Scanning" },
+                    { label: "✅ Blue-Green Deployments" },
+                    { label: "✅ Canary Releases" },
+                    { label: "✅ Rollback Strategies" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+                      <div className="font-semibold text-slate-700 text-sm">{item.label}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">🎯 KEY TAKEAWAY</div>
-                  <div className="status-items">
-                    A good CI/CD pipeline is invisible. Developers push code, and it's automatically in production within minutes.
+                {/* Key Takeaway */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🎯</span> KEY TAKEAWAY
                   </div>
+                  <p className="text-slate-700 text-sm">
+                    A good CI/CD pipeline is invisible. Developers push code, and it's automatically in production within minutes.
+                  </p>
                 </div>
+
               </div>
             </div>
-          </div>
 
-          {/* Tags */}
-          <div className="microservices-grid" style={{ marginTop: '30px' }}>
-            <div className="ms-card" style={{ background: 'rgba(0, 255, 170, 0.1)' }}>
-              <Tag size={16} style={{ color: '#00ffaa' }} /> <span style={{ color: '#00ffaa' }}>TAGS</span>
+            {/* Tags */}
+            <div className="border-t border-slate-200 p-6 bg-slate-50">
+              <div className="flex items-center gap-3 mb-3">
+                <Tag size={16} className="text-blue-600" />
+                <span className="text-sm font-bold text-slate-700">TAGS</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["Jenkins", "GitHub Actions", "Kubernetes", "Terraform", "ArgoCD", "Docker"].map(tag => (
+                  <span key={tag} className="px-3 py-1 bg-white border border-slate-200 text-slate-600 text-xs font-semibold rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            {["Jenkins", "GitHub Actions", "Kubernetes", "Terraform", "ArgoCD", "Docker"].map(tag => (
-              <div key={tag} className="ms-card"><span>{tag}</span></div>
-            ))}
-          </div>
+          </motion.div>
 
-          {/* Comments */}
-          <CommentSection postId={3} />
-        </div>
+          {/* ---- COMMENTS ---- */}
+          <motion.div variants={fadeUp}>
+            <CommentSection postId={3} />
+          </motion.div>
+        </motion.section>
       </div>
     </div>
   );

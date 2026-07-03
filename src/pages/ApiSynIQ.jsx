@@ -1,128 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Copy, Check, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft, Calendar, User, Tag, Copy, Check, Clock, Terminal
+} from 'lucide-react';
 import CommentSection from '../components/CommentSection';
-
-// Canvas Network Component
-const CanvasNetwork = () => {
-  const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
-  const animationRef = useRef(null);
-  const mouseRef = useRef({ x: null, y: null, radius: 200 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    const initParticles = () => {
-      const particles = [];
-      const numParticles = Math.min(120, Math.floor((width * height) / 9000));
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 2.2 + 1.0,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          baseColor: `hsl(${Math.random() * 60 + 150}, 85%, 60%)`,
-        });
-      }
-      particlesRef.current = particles;
-    };
-
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initParticles();
-    };
-
-    const draw = () => {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.globalAlpha = 0.7;
-      
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            const opacity = (1 - distance / 150) * 0.4;
-            ctx.strokeStyle = `rgba(0, 255, 200, ${opacity})`;
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-          }
-        }
-      }
-      
-      particlesRef.current.forEach(p => {
-        if (mouseRef.current.x && mouseRef.current.y) {
-          const dxMouse = p.x - mouseRef.current.x;
-          const dyMouse = p.y - mouseRef.current.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < mouseRef.current.radius) {
-            const force = (mouseRef.current.radius - distMouse) / mouseRef.current.radius;
-            p.vx += dxMouse * 0.002 * force;
-            p.vy += dyMouse * 0.002 * force;
-          }
-        }
-        
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-        
-        p.vx *= 0.99;
-        p.vy *= 0.99;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.baseColor;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00ffcc';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-      
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    const onMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-    const onMouseLeave = () => {
-      mouseRef.current.x = null;
-      mouseRef.current.y = null;
-    };
-    
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
-    resize();
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseleave', onMouseLeave);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return <canvas ref={canvasRef} className="canvas-bg" />;
-};
 
 export default function ApiSynIQ() {
   const navigate = useNavigate();
@@ -163,109 +45,127 @@ public class BookingController {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
+  const staggerContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.15 } },
+  };
+
   return (
-    <div className="app">
-      <CanvasNetwork />
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+    <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
+      {/* Scroll Progress Indicator */}
+      <div className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 z-50 transition-all duration-75" style={{ width: `${scrollProgress}%` }} />
 
-      <div className="container" style={{ paddingTop: '100px', maxWidth: '900px' }}>
-        {/* Back Button */}
-        <button
+      <div className="max-w-4xl mx-auto px-6">
+        
+        {/* ---- BACK BUTTON ---- */}
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
           onClick={() => navigate('/blogs')}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#00ffaa',
-            cursor: 'pointer',
-            fontFamily: "'Fira Code', monospace",
-            fontSize: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '30px'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#80ffff'}
-          onMouseLeave={(e) => e.currentTarget.style.color = '#00ffaa'}
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-6 font-medium"
         >
-          <ArrowLeft size={16} /> Back to Blogs
-        </button>
+          <ArrowLeft size={18} /> Back to Blogs
+        </motion.button>
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="hero-subtitle" style={{ color: '#00ffaa', fontFamily: "'Fira Code', monospace", marginBottom: '10px' }}>
-            $ cat apisyniq.md
+        {/* ---- HEADER ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-4 border border-blue-200 shadow-sm">
+            <Terminal size={16} /> $ cat apisyniq.md
           </div>
-          <h1 className="hero-title" style={{ fontSize: '3rem' }}>ApiSynIQ — Talk to Your APIs</h1>
-          <p className="hero-description">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">
+            ApiSynIQ — Talk to Your APIs
+          </h1>
+          <p className="text-slate-600 text-lg leading-relaxed mb-6">
             An open-source framework that lets users interact with your APIs through natural voice or text.
           </p>
-          
-          <div className="live-status-panel">
-            <div className="status-header">📄 ARTICLE METADATA</div>
-            <div className="status-items">
-              <span><Calendar size={12} /> May 20, 2026</span>
-              <span><User size={12} />Sandeep Konda</span>
-              <span><Clock size={12} /> 8 min read</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Content */}
-        <div className="java-backend-showcase" style={{ padding: '40px' }}>
-          <div className="code-showcase">
-            <div className="code-tabs">
-              <div className="code-tab active">README.md</div>
-            </div>
-            <div className="code-block" style={{ padding: '30px' }}>
-              <div style={{ color: '#aaffdd', lineHeight: '1.8' }}>
-                
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', marginBottom: '15px' }}>What is ApiSynIQ?</h2>
-                <p style={{ marginBottom: '20px' }}>
-                  <strong className="text-[#00ffaa]">ApiSynIQ</strong> is an open-source framework that sits as a conversational layer
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+            <span className="flex items-center gap-1.5"><Calendar size={14} /> May 20, 2026</span>
+            <span className="flex items-center gap-1.5"><User size={14} /> Sandeep Konda</span>
+            <span className="flex items-center gap-1.5"><Clock size={14} /> 8 min read</span>
+          </div>
+        </motion.section>
+
+        {/* ---- MAIN CONTENT ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={staggerContainer}
+          className="space-y-8"
+        >
+          {/* Content Card */}
+          <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="p-8 md:p-10">
+              <div className="prose prose-slate max-w-none">
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">What is ApiSynIQ?</h2>
+                <p className="text-slate-600 leading-relaxed">
+                  <strong className="text-blue-600">ApiSynIQ</strong> is an open-source framework that sits as a conversational layer
                   in front of your APIs. Instead of building complex frontend forms for every endpoint, your users simply speak
                   or type what they want — and ApiSynIQ figures out the intent, constructs the correct request payload, calls
                   the right endpoint, and returns a human-readable response.
                 </p>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">🎯 KEY FEATURE</div>
-                  <div className="status-items">
-                    A conversational layer that makes APIs accessible to anyone, through any interface.
+                {/* Key Feature Highlight */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🎯</span> KEY FEATURE
                   </div>
+                  <p className="text-slate-700 text-sm">
+                    A conversational layer that makes APIs accessible to anyone, through any interface.
+                  </p>
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Architecture</h2>
-                <p style={{ marginBottom: '20px' }}>
-                  A user query travels through four purpose-built layers: <strong className="text-[#00ffaa]">GO Gateway</strong> (HTTP/WebSocket handling), 
-                  <strong className="text-[#00ffaa]"> AI Orchestrator</strong> (LangChain/LangGraph for intent processing), 
-                  <strong className="text-[#00ffaa]"> API Resolver</strong> (Java with pgvector for RAG), and
-                  <strong className="text-[#00ffaa]"> Java Agent SDK</strong> for API annotation.
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Architecture</h2>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  A user query travels through four purpose-built layers: <strong className="text-blue-600">GO Gateway</strong> (HTTP/WebSocket handling),
+                  <strong className="text-blue-600"> AI Orchestrator</strong> (LangChain/LangGraph for intent processing),
+                  <strong className="text-blue-600"> API Resolver</strong> (Java with pgvector for RAG), and
+                  <strong className="text-blue-600"> Java Agent SDK</strong> for API annotation.
                 </p>
 
-                <div className="microservices-grid" style={{ marginBottom: '30px' }}>
-                  <div className="ms-card">🚀 GO Gateway</div>
-                  <div className="ms-card">🧠 AI Orchestrator</div>
-                  <div className="ms-card">💾 API Resolver</div>
-                  <div className="ms-card">🔌 Java Agent SDK</div>
+                {/* Architecture Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  {['🚀 GO Gateway', '🧠 AI Orchestrator', '💾 API Resolver', '🔌 Java Agent SDK'].map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+                      <span className="text-2xl block mb-1">{item.split(' ')[0]}</span>
+                      <span className="text-sm font-semibold text-slate-700">{item.split(' ').slice(1).join(' ')}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <h2 style={{ color: '#00ffaa', fontSize: '1.5rem', margin: '30px 0 15px' }}>Code Example</h2>
-                
-                <div className="terminal" style={{ margin: '20px 0' }}>
-                  <div className="terminal-header">
-                    <div className="terminal-dots">
-                      <div className="dot red"></div>
-                      <div className="dot yellow"></div>
-                      <div className="dot green"></div>
+                <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Code Example</h2>
+
+                {/* Code Block with Copy */}
+                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg mb-6">
+                  <div className="flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-red-500" />
+                      <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <span className="w-3 h-3 rounded-full bg-green-500" />
                     </div>
-                    <div className="terminal-title">BookingController.java</div>
-                    <button onClick={copyCode} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
+                    <span className="text-xs text-slate-400 font-mono">BookingController.java</span>
+                    <button
+                      onClick={copyCode}
+                      className="text-slate-400 hover:text-white transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                     </button>
                   </div>
-                  <div className="terminal-body">
-                    <pre style={{ color: '#d0ffd0', margin: 0, fontSize: '12px', fontFamily: "'Fira Code', monospace" }}>
+                  <pre className="p-4 text-sm text-slate-300 font-mono overflow-x-auto">
 {`@AIExposeController(
     name = "BookingController",
     description = "Handles all ticket booking operations"
@@ -284,33 +184,42 @@ public class BookingController {
         // booking logic
     }
 }`}
-                    </pre>
-                  </div>
+                  </pre>
                 </div>
 
-                <div className="live-status-panel" style={{ margin: '30px 0' }}>
-                  <div className="status-header">🎯 KEY TAKEAWAY</div>
-                  <div className="status-items">
-                    ApiSynIQ removes the friction between users and APIs. Instead of learning API endpoints, users just say what they want.
+                {/* Key Takeaway */}
+                <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
+                    <span className="text-xl">🎯</span> KEY TAKEAWAY
                   </div>
+                  <p className="text-slate-700 text-sm">
+                    ApiSynIQ removes the friction between users and APIs. Instead of learning API endpoints, users just say what they want.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Tags */}
-          <div className="microservices-grid" style={{ marginTop: '30px' }}>
-            <div className="ms-card" style={{ background: 'rgba(0, 255, 170, 0.1)' }}>
-              <Tag size={16} style={{ color: '#00ffaa' }} /> <span style={{ color: '#00ffaa' }}>TAGS</span>
+            {/* Tags */}
+            <div className="border-t border-slate-200 p-6 bg-slate-50">
+              <div className="flex items-center gap-3 mb-3">
+                <Tag size={16} className="text-blue-600" />
+                <span className="text-sm font-bold text-slate-700">TAGS</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['Go', 'Python', 'Java', 'gRPC', 'AI', 'LangChain'].map(tag => (
+                  <span key={tag} className="px-3 py-1 bg-white border border-slate-200 text-slate-600 text-xs font-semibold rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            {['Go', 'Python', 'Java', 'gRPC', 'AI', 'LangChain'].map(tag => (
-              <div key={tag} className="ms-card"><span>{tag}</span></div>
-            ))}
-          </div>
+          </motion.div>
 
-          {/* Comments */}
-          <CommentSection postId={1} />
-        </div>
+          {/* ---- COMMENTS ---- */}
+          <motion.div variants={fadeUp}>
+            <CommentSection postId={1} />
+          </motion.div>
+        </motion.section>
       </div>
     </div>
   );

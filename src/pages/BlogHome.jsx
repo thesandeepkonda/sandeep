@@ -1,135 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Calendar, User, Clock, ArrowRight, Heart, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  Search, Calendar, User, Clock, ArrowRight, Heart, Eye, Terminal
+} from 'lucide-react';
 
-// Canvas Network Component
-const CanvasNetwork = () => {
-  const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
-  const animationRef = useRef(null);
-  const mouseRef = useRef({ x: null, y: null, radius: 200 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    const initParticles = () => {
-      const particles = [];
-      const numParticles = Math.min(120, Math.floor((width * height) / 9000));
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 2.2 + 1.0,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          baseColor: `hsl(${Math.random() * 60 + 150}, 85%, 60%)`,
-        });
-      }
-      particlesRef.current = particles;
-    };
-
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initParticles();
-    };
-
-    const draw = () => {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.globalAlpha = 0.7;
-      
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            const opacity = (1 - distance / 150) * 0.4;
-            ctx.strokeStyle = `rgba(0, 255, 200, ${opacity})`;
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-          }
-        }
-      }
-      
-      particlesRef.current.forEach(p => {
-        if (mouseRef.current.x && mouseRef.current.y) {
-          const dxMouse = p.x - mouseRef.current.x;
-          const dyMouse = p.y - mouseRef.current.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < mouseRef.current.radius) {
-            const force = (mouseRef.current.radius - distMouse) / mouseRef.current.radius;
-            p.vx += dxMouse * 0.002 * force;
-            p.vy += dyMouse * 0.002 * force;
-          }
-        }
-        
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-        
-        p.vx *= 0.99;
-        p.vy *= 0.99;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.baseColor;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00ffcc';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-      
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    const onMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-    const onMouseLeave = () => {
-      mouseRef.current.x = null;
-      mouseRef.current.y = null;
-    };
-    
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
-    resize();
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseleave', onMouseLeave);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return <canvas ref={canvasRef} className="canvas-bg" />;
-};
-
-// High-quality blog images
+// Blog images (unchanged)
 const blogImages = {
   1: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop",
   2: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=500&fit=crop",
   3: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=500&fit=crop",
   4: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=500&fit=crop",
-  5: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop"  // Add this for Zufeto
+  5: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop"
 };
 
 export default function BlogHome() {
@@ -224,263 +106,183 @@ export default function BlogHome() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div className="app">
-      <CanvasNetwork />
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
 
-      <div className="container" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+  const staggerContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.15 } },
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
+      {/* Scroll Progress Indicator */}
+      <div className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 z-50 transition-all duration-75" style={{ width: `${scrollProgress}%` }} />
+
+      <div className="max-w-6xl mx-auto px-6">
         
-        {/* Header */}
-        <div className="text-center" style={{ marginBottom: '60px' }}>
-          <div className="hero-subtitle" style={{ color: '#00ffaa', fontFamily: "'Fira Code', monospace", marginBottom: '16px', fontSize: '14px' }}>
-            ~$ ls -la /blog/posts
+        {/* ---- HEADER ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-6 border border-blue-200 shadow-sm">
+            <Terminal size={16} /> ~$ ls -la /blog/posts
           </div>
-          <h1 className="hero-title" style={{ fontSize: '3.5rem', marginBottom: '16px' }}>
-            Technical <span>Insights</span>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
+            Technical <span className="text-blue-600">Insights</span>
           </h1>
-          <p className="hero-description" style={{ maxWidth: '600px', margin: '0 auto', color: '#a0a0b0' }}>
+          <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
             Deep dives into Kubernetes, DevOps, Java microservices, and cloud infrastructure.
           </p>
-        </div>
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full" />
+        </motion.section>
 
-        {/* Search and Filter Bar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '40px' }}>
+        {/* ---- SEARCH & FILTER ---- */}
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="flex flex-col gap-6 mb-10"
+        >
           {/* Search */}
-          <div style={{ maxWidth: '500px', margin: '0 auto', width: '100%' }}>
-            <div style={{ position: 'relative' }}>
-              <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
+          <div className="max-w-lg mx-auto w-full">
+            <div className="relative">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '14px 16px 14px 48px',
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(0, 255, 170, 0.2)',
-                  borderRadius: '12px',
-                  color: '#fff',
-                  fontSize: '14px',
-                  outline: 'none',
-                  transition: 'all 0.3s ease'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#00ffaa'}
-                onBlur={(e) => e.target.style.borderColor = 'rgba(0, 255, 170, 0.2)'}
+                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
               />
             </div>
           </div>
 
           {/* Categories */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+          <div className="flex flex-wrap justify-center gap-3">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: '8px 20px',
-                  background: selectedCategory === cat ? '#00ffaa' : 'rgba(0, 0, 0, 0.3)',
-                  border: selectedCategory === cat ? 'none' : '1px solid rgba(0, 255, 170, 0.3)',
-                  borderRadius: '40px',
-                  color: selectedCategory === cat ? '#000' : '#ccc',
-                  fontSize: '13px',
-                  fontWeight: selectedCategory === cat ? 'bold' : 'normal',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600'
+                }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Results Count */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div className="live-status-panel" style={{ display: 'inline-block' }}>
-            <div className="status-header">📊 RESULTS</div>
-            <div className="status-items">
-              <span>{filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} found</span>
-              {searchQuery && <span>🔍 Searching: "{searchQuery}"</span>}
-            </div>
+        {/* ---- RESULTS COUNT ---- */}
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="text-center mb-10"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-sm text-slate-600">
+            <span className="font-semibold text-blue-600">{filteredPosts.length}</span> article{filteredPosts.length !== 1 ? 's' : ''} found
+            {searchQuery && <span className="text-slate-400 ml-2">🔍 "{searchQuery}"</span>}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Blog Cards Grid - Large & Professional */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-          {filteredPosts.map((post, index) => (
-            <Link to={post.path} key={post.id} style={{ textDecoration: 'none' }}>
-              <div 
-                className="project-card" 
-                style={{ 
-                  display: 'grid',
-                  gridTemplateColumns: '300px 1fr',
-                  gap: '0',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  animation: `fadeInUp 0.5s ease ${index * 0.1}s both`
-                }}
-              >
-                {/* Image Section */}
-                <div style={{
-                  height: '100%',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}>
-                  <img 
-                    src={blogImages[post.id]} 
-                    alt={post.title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transition: 'transform 0.5s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: '16px',
-                    left: '16px',
-                    background: 'rgba(0, 255, 170, 0.9)',
-                    padding: '4px 12px',
-                    borderRadius: '20px',
-                    fontSize: '11px',
-                    fontWeight: 'bold',
-                    color: '#000'
-                  }}>
-                    {post.category}
-                  </div>
-                </div>
-                
-                {/* Content Section */}
-                <div style={{ padding: '28px' }}>
-                  {/* Author & Meta */}
-                  <div style={{ display: 'flex', gap: '20px', marginBottom: '16px', fontSize: '12px', color: '#888', fontFamily: "'Fira Code', monospace" }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <User size={14} /> {post.author}
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Calendar size={14} /> {post.date}
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Clock size={14} /> {post.readTime} min read
-                    </span>
-                  </div>
-                  
-                  {/* Title */}
-                  <h2 style={{ 
-                    fontSize: '1.8rem', 
-                    fontWeight: 'bold', 
-                    color: '#fff', 
-                    marginBottom: '16px',
-                    lineHeight: '1.3'
-                  }}>
-                    {post.title}
-                  </h2>
-                  
-                  {/* Excerpt */}
-                  <p style={{ color: '#b0b0c0', lineHeight: '1.6', marginBottom: '20px', fontSize: '14px' }}>
-                    {post.excerpt}
-                  </p>
-                  
-                  {/* Tags - Showing many tags like in your screenshot */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
-                    {post.tags.slice(0, 8).map(tag => (
-                      <span key={tag} style={{
-                        padding: '4px 12px',
-                        background: 'rgba(0, 255, 170, 0.1)',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        color: '#00ffaa',
-                        fontFamily: "'Fira Code', monospace"
-                      }}>
-                        {tag}
-                      </span>
-                    ))}
-                    {post.tags.length > 8 && (
-                      <span style={{
-                        padding: '4px 12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        color: '#888'
-                      }}>
-                        +{post.tags.length - 8} more
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Stats & Read More */}
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    borderTop: '1px solid rgba(255,255,255,0.08)',
-                    paddingTop: '20px',
-                    marginTop: '8px'
-                  }}>
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#666' }}>
-                        <Eye size={14} /> {post.views.toLocaleString()} views
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#666' }}>
-                        <Heart size={14} /> {post.likes} likes
+        {/* ---- BLOG CARDS ---- */}
+        {filteredPosts.length > 0 ? (
+          <motion.div
+            initial="hidden"
+            animate="show"
+            variants={staggerContainer}
+            className="flex flex-col gap-8"
+          >
+            {filteredPosts.map((post, index) => (
+              <motion.div key={post.id} variants={fadeUp}>
+                <Link to={post.path} className="block">
+                  <div className="group grid grid-cols-1 md:grid-cols-[300px_1fr] bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    {/* Image */}
+                    <div className="relative h-60 md:h-auto overflow-hidden">
+                      <img
+                        src={blogImages[post.id]}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        {post.category}
                       </span>
                     </div>
-                    <span style={{ 
-                      color: '#00ffaa', 
-                      fontSize: '14px', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '8px',
-                      fontWeight: '500'
-                    }}>
-                      Read more <ArrowRight size={14} />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
 
-        {filteredPosts.length === 0 && (
-          <div className="terminal" style={{ maxWidth: '500px', margin: '60px auto' }}>
-            <div className="terminal-header">
-              <div className="terminal-dots">
-                <div className="dot red"></div>
-                <div className="dot yellow"></div>
-                <div className="dot green"></div>
-              </div>
-              <div className="terminal-title">error — 404</div>
+                    {/* Content */}
+                    <div className="p-6 md:p-8 flex flex-col">
+                      {/* Meta */}
+                      <div className="flex flex-wrap gap-4 text-xs text-slate-500 font-mono mb-3">
+                        <span className="flex items-center gap-1.5"><User size={14} /> {post.author}</span>
+                        <span className="flex items-center gap-1.5"><Calendar size={14} /> {post.date}</span>
+                        <span className="flex items-center gap-1.5"><Clock size={14} /> {post.readTime} min read</span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
+                        {post.title}
+                      </h3>
+
+                      {/* Excerpt */}
+                      <p className="text-slate-600 leading-relaxed mb-4 flex-grow">
+                        {post.excerpt}
+                      </p>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        {post.tags.slice(0, 8).map(tag => (
+                          <span key={tag} className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
+                            {tag}
+                          </span>
+                        ))}
+                        {post.tags.length > 8 && (
+                          <span className="px-3 py-1 bg-slate-50 text-slate-500 text-xs font-semibold rounded-full">
+                            +{post.tags.length - 8} more
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                        <div className="flex gap-4 text-xs text-slate-400">
+                          <span className="flex items-center gap-1"><Eye size={14} /> {post.views.toLocaleString()}</span>
+                          <span className="flex items-center gap-1"><Heart size={14} /> {post.likes}</span>
+                        </div>
+                        <span className="flex items-center gap-1 text-blue-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                          Read more <ArrowRight size={16} />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            initial="hidden"
+            animate="show"
+            variants={fadeUp}
+            className="max-w-lg mx-auto text-center py-16"
+          >
+            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="text-5xl mb-4">🔍</div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">No articles found</h3>
+              <p className="text-slate-500">Try a different search term or category.</p>
             </div>
-            <div className="terminal-body">
-              <div><span className="term-command">$</span> No articles found</div>
-              <div><span className="term-string">"Try a different search term"</span></div>
-              <div className="cursor"></div>
-            </div>
-          </div>
+          </motion.div>
         )}
       </div>
-
-      <style>
-        {`
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}
-      </style>
     </div>
   );
 }

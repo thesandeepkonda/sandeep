@@ -1,124 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-// Canvas Network Component
-const CanvasNetwork = () => {
-  const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
-  const animationRef = useRef(null);
-  const mouseRef = useRef({ x: null, y: null, radius: 200 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    const initParticles = () => {
-      const particles = [];
-      const numParticles = Math.min(120, Math.floor((width * height) / 9000));
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 2.2 + 1.0,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          baseColor: `hsl(${Math.random() * 60 + 150}, 85%, 60%)`,
-        });
-      }
-      particlesRef.current = particles;
-    };
-
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initParticles();
-    };
-
-    const draw = () => {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.globalAlpha = 0.7;
-      
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            const opacity = (1 - distance / 150) * 0.4;
-            ctx.strokeStyle = `rgba(0, 255, 200, ${opacity})`;
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-          }
-        }
-      }
-      
-      particlesRef.current.forEach(p => {
-        if (mouseRef.current.x && mouseRef.current.y) {
-          const dxMouse = p.x - mouseRef.current.x;
-          const dyMouse = p.y - mouseRef.current.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < mouseRef.current.radius) {
-            const force = (mouseRef.current.radius - distMouse) / mouseRef.current.radius;
-            p.vx += dxMouse * 0.002 * force;
-            p.vy += dyMouse * 0.002 * force;
-          }
-        }
-        
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-        
-        p.vx *= 0.99;
-        p.vy *= 0.99;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.baseColor;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00ffcc';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-      
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    const onMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-    const onMouseLeave = () => {
-      mouseRef.current.x = null;
-      mouseRef.current.y = null;
-    };
-    
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
-    resize();
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseleave', onMouseLeave);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return <canvas ref={canvasRef} className="canvas-bg" />;
-};
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Mail, MapPin, Award, Briefcase, GraduationCap,
+  Zap, Cloud, Server, Layers, Code, Database, ShieldCheck, Sparkles,
+  ArrowRight, Terminal
+} from 'lucide-react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 export default function About() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -142,269 +29,299 @@ export default function About() {
   };
 
   const achievements = [
-    { icon: "🏆", title: "AWS Certified Solutions Architect", year: "2024", description: "Professional cloud architecture certification" },
-    { icon: "🏅", title: "Kubernetes Administrator", year: "2024", description: "Certified Kubernetes Administrator (CKA)" },
-    { icon: "🎓", title: "M.Tech in Computer Science", year: "2023", description: "Cloud Computing & Distributed Systems" },
-    { icon: "⚡", title: "50+ Deployments", year: "2024", description: "Production deployments managed" }
+    { icon: <Award className="w-8 h-8" />, title: "AWS Certified Solutions Architect", year: "2024", description: "Professional cloud architecture certification" },
+    { icon: <Award className="w-8 h-8" />, title: "Kubernetes Administrator", year: "2024", description: "Certified Kubernetes Administrator (CKA)" },
+    { icon: <GraduationCap className="w-8 h-8" />, title: "M.Tech in Computer Science", year: "2023", description: "Cloud Computing & Distributed Systems" },
+    { icon: <Zap className="w-8 h-8" />, title: "50+ Deployments", year: "2024", description: "Production deployments managed" }
   ];
 
   const contactOptions = [
-    { icon: "✉️", label: "Email", value: "kondasandeep56@gmail.com", link: "mailto:kondasandeep56@gmail.com" },
-    { icon: "🐙", label: "GitHub", value: "/thesandeepkonda", link: "https://github.com/thesandeepkonda" },
-    { icon: "🔗", label: "LinkedIn", value: "/sandeepkonda07", link: "https://www.linkedin.com/in/sandeepkonda07" },
-    { icon: "📍", label: "Location", value: "Hyderabad, India", link: null }
+    { icon: <Mail size={18} />, label: "Email", value: "kondasandeep56@gmail.com", link: "mailto:kondasandeep56@gmail.com" },
+    { icon: <FaGithub size={18} />, label: "GitHub", value: "/thesandeepkonda", link: "https://github.com/thesandeepkonda" },
+    { icon: <FaLinkedin size={18} />, label: "LinkedIn", value: "/sandeepkonda07", link: "https://www.linkedin.com/in/sandeepkonda07" },
+    { icon: <MapPin size={18} />, label: "Location", value: "Hyderabad, India", link: null }
   ];
 
-  return (
-    <div className="app">
-      <CanvasNetwork />
-      <div className="bg-animation"></div>
-      <div className="scroll-indicator" style={{ width: `${scrollProgress}%` }}></div>
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
 
-      <div className="container" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+  const staggerContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.15 } },
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
+      {/* Scroll Progress Indicator */}
+      <div className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 z-50 transition-all duration-75" style={{ width: `${scrollProgress}%` }} />
+
+      <div className="max-w-6xl mx-auto px-6">
         
-        {/* Header */}
-        <div className="text-center" style={{ marginBottom: '60px' }}>
-          <div className="hero-subtitle" style={{ color: '#00ffaa', fontFamily: "'Fira Code', monospace", marginBottom: '16px', fontSize: '14px' }}>
-            ~$ cat about.md
+        {/* ---- HEADER ---- */}
+        <motion.section
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-6 border border-blue-200 shadow-sm">
+            <Terminal size={16} /> ~$ cat about.md
           </div>
-          <h1 className="hero-title" style={{ fontSize: '3.5rem', marginBottom: '16px' }}>
-            About <span>Me</span>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
+            About <span className="text-blue-600">Me</span>
           </h1>
-          <p className="hero-description" style={{ maxWidth: '600px', margin: '0 auto', color: '#a0a0b0' }}>
+          <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
             DevOps Engineer & Java Backend Developer passionate about cloud-native systems and AI.
           </p>
-        </div>
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full" />
+        </motion.section>
 
-        {/* Main Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '40px', marginBottom: '60px' }}>
-          
-          {/* Left Column - Profile Image & Quick Info */}
-          <div>
-            <div className="java-backend-showcase" style={{ padding: '32px', textAlign: 'center' }}>
+        {/* ---- MAIN GRID ---- */}
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={staggerContainer}
+          className="grid md:grid-cols-2 gap-12 mb-16"
+        >
+          {/* Left Column - Profile & Contact */}
+          <motion.div variants={fadeUp}>
+            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 text-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl opacity-50 pointer-events-none" />
               
-              {/* PROFILE IMAGE - FULL DISPLAY FIX */}
-              <div style={{
-                width: '360px',
-                height: '500px',
-                margin: '0 auto 24px',
-                borderRadius: '10%',
-                overflow: 'hidden',
-                border: '3px solid #00ffaa',
-                boxShadow: '0 0 20px rgba(0, 255, 170, 0.3)',
-                backgroundColor: '#0a0a12'
-              }}>
-                <img 
-                  src="/images/photo.JPG" 
+              {/* Profile Image */}
+              <div className="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg bg-slate-100">
+                <img
+                  src="/images/photo.JPG"
                   alt="Sandeep Konda"
-                  style={{
-                  width: 'auto',
-                  height: '100%',
-                  objectFit: 'contain',
-                  objectPosition: 'center'
-                }}
+                  className="w-full h-full object-cover"
                 />
               </div>
-              
-              <h2 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '8px' }}>Sandeep Konda</h2>
-              <p style={{ color: '#00ffaa', fontSize: '14px', marginBottom: '24px', fontFamily: "'Fira Code', monospace" }}>
-                DevOps Engineer | Java Backend Architect
-              </p>
-              
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
-                  {contactOptions.map((item, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ color: '#00ffaa', fontSize: '18px' }}>{item.icon}</div>
-                      <div>
-                        <div style={{ fontSize: '11px', color: '#666' }}>{item.label}</div>
-                        {item.link ? (
-                          <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: '#ccc', fontSize: '13px', textDecoration: 'none' }}>
-                            {item.value}
-                          </a>
-                        ) : (
-                          <span style={{ color: '#ccc', fontSize: '13px' }}>{item.value}</span>
-                        )}
-                      </div>
+
+              <h2 className="text-2xl font-bold text-slate-900 mb-1">Sandeep Konda</h2>
+              <p className="text-blue-600 font-mono text-sm mb-6">DevOps Engineer | Java Backend Architect</p>
+
+              <div className="border-t border-slate-100 pt-6 space-y-4 text-left">
+                {contactOptions.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl hover:bg-blue-50 transition-colors">
+                    <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center text-blue-600">
+                      {item.icon}
                     </div>
-                  ))}
-                </div>
+                    <div>
+                      <div className="text-xs text-slate-400 font-medium">{item.label}</div>
+                      {item.link ? (
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-slate-700 text-sm font-semibold hover:text-blue-600 transition-colors">
+                          {item.value}
+                        </a>
+                      ) : (
+                        <span className="text-slate-700 text-sm font-semibold">{item.value}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Column - Bio & Call to Action */}
-          <div>
-            <div className="java-backend-showcase" style={{ padding: '32px' }}>
-              <h2 className="section-title" style={{ fontSize: '1.5rem', marginBottom: '20px' }}>
-                Who <span>Am I?</span>
+          {/* Right Column - Bio & CTA */}
+          <motion.div variants={fadeUp}>
+            <div className="bg-white p-8 md:p-10 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">
+                Who <span className="text-blue-600">Am I?</span>
               </h2>
               
-              <p style={{ color: '#c0c0d0', lineHeight: '1.8', marginBottom: '16px' }}>
-                Engineer, researcher, and lifelong tinkerer building systems that <strong style={{ color: '#00ffaa' }}>sense, reason, and act</strong> — 
-                at the intersection of DevOps, Java Backend, and Cloud Infrastructure.
-              </p>
-              
-              <p style={{ color: '#c0c0d0', lineHeight: '1.8', marginBottom: '24px' }}>
-                I bridge the gap between infrastructure and application logic, ensuring systems are not just functional, 
-                but scalable, secure, and resilient. My journey began in the trenches of Linux systems and CI/CD pipelines, 
-                evolving into cloud-native architecture and microservices.
-              </p>
+              <div className="space-y-4 text-slate-600 leading-relaxed flex-grow">
+                <p>
+                  Engineer, researcher, and lifelong tinkerer building systems that <strong className="text-blue-600">sense, reason, and act</strong> — 
+                  at the intersection of DevOps, Java Backend, and Cloud Infrastructure.
+                </p>
+                <p>
+                  I bridge the gap between infrastructure and application logic, ensuring systems are not just functional, 
+                  but scalable, secure, and resilient. My journey began in the trenches of Linux systems and CI/CD pipelines, 
+                  evolving into cloud-native architecture and microservices.
+                </p>
+              </div>
 
-              {/* Location and Role Info */}
-              <div style={{ 
-                display: 'flex', 
-                flexWrap: 'wrap', 
-                gap: '16px', 
-                marginBottom: '24px',
-                padding: '16px',
-                background: 'rgba(0, 255, 170, 0.05)',
-                borderRadius: '12px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>📍</span>
-                  <span style={{ color: '#ccc', fontSize: '13px' }}>Hyderabad, India</span>
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 p-4 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                <div className="text-center">
+                  <div className="text-blue-600 font-bold text-lg">📍</div>
+                  <div className="text-xs text-slate-500 font-medium">Location</div>
+                  <div className="text-sm text-slate-800 font-semibold">Hyderabad</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>💼</span>
-                  <span style={{ color: '#ccc', fontSize: '13px' }}>DevOps & Java Backend Engineer</span>
+                <div className="text-center">
+                  <div className="text-blue-600 font-bold text-lg">💼</div>
+                  <div className="text-xs text-slate-500 font-medium">Role</div>
+                  <div className="text-sm text-slate-800 font-semibold">DevOps / Java</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🎓</span>
-                  <span style={{ color: '#ccc', fontSize: '13px' }}>M.Tech · Cloud Computing</span>
+                <div className="text-center">
+                  <div className="text-blue-600 font-bold text-lg">🎓</div>
+                  <div className="text-xs text-slate-500 font-medium">Education</div>
+                  <div className="text-sm text-slate-800 font-semibold">M.Tech</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-blue-600 font-bold text-lg">⚡</div>
+                  <div className="text-xs text-slate-500 font-medium">Deploys</div>
+                  <div className="text-sm text-slate-800 font-semibold">50+</div>
                 </div>
               </div>
 
-              {/* Call to Action Banner */}
-              <div className="live-status-panel" style={{ background: 'linear-gradient(135deg, rgba(0, 255, 170, 0.1), rgba(0, 0, 0, 0.4))' }}>
-                <div className="status-header" style={{ fontSize: '14px' }}>🚀 LET'S COLLABORATE</div>
-                <div className="status-items" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-                  <p style={{ margin: 0, fontSize: '14px' }}>
-                    Let's build, research, or just talk shop. Open to graduate research opportunities, 
-                    engineering collaborations, and conversations about agentic AI, robotics, or reinforcement learning.
-                  </p>
-                  <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
-                    <button 
-                      onClick={() => window.location.href = '/contact'}
-                      className="trigger-btn"
-                      style={{ padding: '8px 20px', fontSize: '12px' }}
-                    >
-                      Get in touch →
-                    </button>
-                    <button 
-                      onClick={() => window.open('https://github.com/thesandeepkonda', '_blank')}
-                      style={{ 
-                        padding: '8px 20px', 
-                        background: 'transparent', 
-                        border: '1px solid #00ffaa',
-                        borderRadius: '40px',
-                        color: '#00ffaa',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                    >
-                      View GitHub
-                    </button>
-                    <button 
-                      onClick={() => window.open('/resume.pdf', '_blank')}
-                      style={{ 
-                        padding: '8px 20px', 
-                        background: 'transparent', 
-                        border: '1px solid #00ffaa',
-                        borderRadius: '40px',
-                        color: '#00ffaa',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                    >
-                      📄 Resume/CV
-                    </button>
-                  </div>
-                </div>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3 mt-6">
+                <button
+                  onClick={() => window.location.href = '/contact'}
+                  className="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-blue-600/30 hover:-translate-y-0.5"
+                >
+                  Get in touch <ArrowRight size={18} />
+                </button>
+                <button
+                  onClick={() => window.open('https://github.com/thesandeepkonda', '_blank')}
+                  className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-blue-500 text-slate-700 px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-0.5"
+                >
+                  <FaGithub size={18} /> GitHub
+                </button>
+                <button
+                  onClick={() => window.open('/resume.pdf', '_blank')}
+                  className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-blue-500 text-slate-700 px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-0.5"
+                >
+                  <Sparkles size={18} /> Resume
+                </button>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Achievements Section */}
-        <div className="devops-dashboard" style={{ marginBottom: '60px' }}>
-          <h2 className="section-title" style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '16px' }}>
-            Key <span>Achievements</span>
+        {/* ---- ACHIEVEMENTS ---- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-100px' }}
+          variants={fadeUp}
+          className="mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-center mb-4">
+            Key <span className="text-blue-600">Achievements</span>
           </h2>
-          <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
-            {achievements.map((achievement, idx) => (
-              <div key={idx} className="dashboard-card" style={{ textAlign: 'center' }}>
-                <div style={{ color: '#00ffaa', marginBottom: '12px', fontSize: '28px' }}>{achievement.icon}</div>
-                <h3 style={{ color: '#fff', fontSize: '1rem', marginBottom: '4px' }}>{achievement.title}</h3>
-                <span style={{ color: '#00ffaa', fontSize: '11px', fontFamily: "'Fira Code', monospace" }}>{achievement.year}</span>
-                <p style={{ color: '#888', fontSize: '11px', marginTop: '8px' }}>{achievement.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Technical Skills Section */}
-        <div className="advanced-tech-stack" style={{ marginBottom: '60px' }}>
-          <h2 className="section-title" style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '16px' }}>
-            Technical <span>Skills</span>
-          </h2>
-          <div className="tech-categories">
-            {Object.entries(technicalSkills).map(([category, skills]) => (
-              <div key={category} className="tech-category-card">
-                <div className="tech-cat-icon">
-                  {category === "Cloud & DevOps" && "☁️"}
-                  {category === "Backend Development" && "⚙️"}
-                  {category === "Frontend" && "🎨"}
-                  {category === "Databases" && "🗄️"}
-                  {category === "Monitoring & Security" && "🔒"}
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
+          
+          <motion.div variants={staggerContainer} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {achievements.map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={fadeUp}
+                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center group"
+              >
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-md group-hover:scale-110 transition-transform">
+                  {item.icon}
                 </div>
-                <h3>{category}</h3>
-                <div className="tech-items">
+                <h3 className="text-slate-900 font-bold text-base">{item.title}</h3>
+                <span className="text-blue-600 text-xs font-mono font-semibold">{item.year}</span>
+                <p className="text-slate-500 text-xs mt-2">{item.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* ---- TECHNICAL SKILLS ---- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-100px' }}
+          variants={fadeUp}
+          className="mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-center mb-4">
+            Technical <span className="text-blue-600">Skills</span>
+          </h2>
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
+
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(technicalSkills).map(([category, skills]) => (
+              <motion.div
+                key={category}
+                variants={fadeUp}
+                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+                    {category === "Cloud & DevOps" && <Cloud size={20} />}
+                    {category === "Backend Development" && <Server size={20} />}
+                    {category === "Frontend" && <Layers size={20} />}
+                    {category === "Databases" && <Database size={20} />}
+                    {category === "Monitoring & Security" && <ShieldCheck size={20} />}
+                  </div>
+                  <h3 className="text-slate-900 font-bold text-lg">{category}</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
                   {skills.map(skill => (
-                    <span key={skill} className="tech-badge">{skill}</span>
+                    <span key={skill} className="px-3 py-1 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold rounded-full hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                      {skill}
+                    </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.section>
 
-        {/* Research Interests Section */}
-        <div className="java-backend-showcase" style={{ marginBottom: '60px' }}>
-          <div className="code-tabs">
-            <div className="code-tab active">🧠 RESEARCH INTERESTS</div>
-          </div>
-          <div style={{ padding: '32px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-              <div className="ms-card" style={{ textAlign: 'center', padding: '20px' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>🧠</div>
-                <h3 style={{ color: '#fff', fontSize: '1rem', marginBottom: '8px' }}>Agentic AI</h3>
-                <p style={{ color: '#888', fontSize: '12px' }}>Autonomous agents, decision-making systems, and multi-agent coordination</p>
-              </div>
-              <div className="ms-card" style={{ textAlign: 'center', padding: '20px' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>🤖</div>
-                <h3 style={{ color: '#fff', fontSize: '1rem', marginBottom: '8px' }}>Robotics</h3>
-                <p style={{ color: '#888', fontSize: '12px' }}>Control systems, robot perception, and autonomous navigation</p>
-              </div>
-              <div className="ms-card" style={{ textAlign: 'center', padding: '20px' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>🚀</div>
-                <h3 style={{ color: '#fff', fontSize: '1rem', marginBottom: '8px' }}>Reinforcement Learning</h3>
-                <p style={{ color: '#888', fontSize: '12px' }}>Deep RL, policy optimization, and real-world applications</p>
+        {/* ---- RESEARCH INTERESTS ---- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-100px' }}
+          variants={fadeUp}
+          className="mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-center mb-4">
+            Research <span className="text-blue-600">Interests</span>
+          </h2>
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
+
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: "🧠", title: "Agentic AI", desc: "Autonomous agents, decision-making systems, and multi-agent coordination" },
+              { icon: "🤖", title: "Robotics", desc: "Control systems, robot perception, and autonomous navigation" },
+              { icon: "🚀", title: "Reinforcement Learning", desc: "Deep RL, policy optimization, and real-world applications" }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={fadeUp}
+                className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center group"
+              >
+                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform inline-block">{item.icon}</div>
+                <h3 className="text-slate-900 font-bold text-xl mb-2">{item.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* ---- FINAL CTA (OPEN TO) ---- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+        >
+          <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-3xl p-10 md:p-16 text-center shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-[120px] opacity-20 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-[120px] opacity-20 pointer-events-none" />
+
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+                🌟 Open To
+              </h2>
+              <div className="flex flex-wrap justify-center gap-4 text-white/90 text-lg font-medium">
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🎓 Graduate Research</span>
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🤝 Engineering Collaborations</span>
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">💬 Technical Conversations</span>
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🚀 Open Source</span>
               </div>
             </div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Open To Section */}
-        <div className="live-status-panel" style={{ textAlign: 'center' }}>
-          <div className="status-header" style={{ fontSize: '14px' }}>🌟 OPEN TO</div>
-          <div className="status-items" style={{ justifyContent: 'center', gap: '24px' }}>
-            <span>🎓 Graduate Research Opportunities</span>
-            <span>🤝 Engineering Collaborations</span>
-            <span>💬 Technical Conversations</span>
-            <span>🚀 Open Source Contributions</span>
-          </div>
-        </div>
       </div>
     </div>
   );
