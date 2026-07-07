@@ -120,7 +120,7 @@ export default function HomePage() {
             { label: 'DevOps & Cloud', icon: <Cloud size={14} /> },
             { label: 'Java Backend', icon: <Server size={14} /> },
             { label: '2+ Years Exp', icon: <Sparkles size={14} /> },
-            { label: '50+ Deploys', icon: <CheckCircle size={14} /> },
+            { label: '15+ Deploys', icon: <CheckCircle size={14} /> },
             { label: '99.99% Uptime', icon: <CheckCircle size={14} /> },
           ].map((item, idx) => (
             <span

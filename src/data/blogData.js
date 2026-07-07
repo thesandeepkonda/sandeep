@@ -1,17 +1,27 @@
 export const blogPosts = [
-  {
-    id: 1,
-    title: "ApiSynIQ — Talk to Your APIs",
-    excerpt: "An open-source framework that lets users interact with your APIs through natural voice or text — no forms, no JSON wrangling, just intent.",
-    date: "May 20, 2026",
-    author: "Koteshwar Chinnolla",
-    category: "Open Source",
-    path: "/blog/apisyniq",
-    readTime: 8,
-    views: 1247,
-    likes: 89,
-    tags: ["Go", "Python", "Java", "gRPC", "AI", "NLP"]
-  },
+ {
+  id: 1,
+  title: "Learning Management System (LMS) — Java Backend Development",
+  excerpt: "Designed and developed a scalable Java Spring Boot backend for a Learning Management System, featuring secure REST APIs for authentication, course management, student enrollment, assignments, quizzes, and progress tracking.",
+  date: "July 7, 2026",
+  author: "Sandeep Konda",
+  category: "Java Backend",
+  path: "/blog/ApiSynIQ",
+  readTime: 8,
+  views: 1247,
+  likes: 89,
+  tags: [
+    "Java",
+    "Spring Boot",
+    "Spring Security",
+    "JWT",
+    "Hibernate",
+    "JPA",
+    "REST API",
+    "MySQL",
+    "LMS"
+  ]
+},
   {
     id: 2,
     title: "Deploying Java Microservices on Kubernetes",

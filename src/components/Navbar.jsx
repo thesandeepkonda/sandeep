@@ -71,7 +71,7 @@ export default function Navbar() {
               <FaGithub size={18} />
             </a>
             <a
-              href="https://linkedin.com/in/thesandeepkonda"
+              href="https://www.linkedin.com/in/sandeepkonda97/"
               target="_blank"
               rel="noreferrer"
               className="text-olive/70 hover:text-olive transition-colors"

@@ -51,7 +51,7 @@ export default function Footer() {
               <a href="https://github.com/thesandeepkonda" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">
                 <FaGithub />
               </a>
-              <a href="https://linkedin.com/in/thesandeepkonda" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">
+              <a href="https://www.linkedin.com/in/sandeepkonda97/" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">
                 <FaLinkedin />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">

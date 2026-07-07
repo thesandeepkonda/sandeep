@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Mail, MapPin, Award, Briefcase, GraduationCap,
-  Zap, Cloud, Server, Layers, Code, Database, ShieldCheck, Sparkles,
-  ArrowRight, Terminal
+  Mail,
+  MapPin,
+  Award,
+  Briefcase,
+  GraduationCap,
+  Zap,
+  Cloud,
+  Server,
+  Layers,
+  Code,
+  Database,
+  ShieldCheck,
+  Sparkles,
+  ArrowRight,
+  Terminal,
+  GitBranch,
+  Boxes
 } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
@@ -20,25 +34,69 @@ export default function About() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const technicalSkills = {
-    "Cloud & DevOps": ["AWS (EKS, ECS, RDS, S3, CloudFront)", "Terraform", "Docker", "Kubernetes", "Jenkins", "GitHub Actions"],
-    "Backend Development": ["Java 17+", "Spring Boot", "Microservices", "Hibernate", "REST APIs", "Kafka"],
-    "Frontend": ["React.js", "JavaScript", "HTML/CSS", "Tailwind CSS"],
-    "Databases": ["PostgreSQL", "MySQL", "MongoDB", "Redis"],
-    "Monitoring & Security": ["Prometheus", "Grafana", "SonarQube", "IAM"]
-  };
+      const technicalSkills = {
+        "Backend Frameworks & Libraries": [
+          "Java",
+          "Spring Boot",
+          "Spring Data JPA",
+          "Hibernate",
+          "RESTful Web Services",
+          "Spring Security"
+        ],
+
+        "Cloud Infrastructure (AWS)": [
+          "EC2",
+          "VPC",
+          "Elastic Load Balancing (ELB)",
+          "S3",
+          "Route 53",
+          "CloudFront",
+          "CloudWatch",
+          "IAM",
+          "ACM",
+          "ECR",
+          "ECS"
+        ],
+
+        "DevOps & CI/CD": [
+          "Git",
+          "GitHub",
+          "GitHub Actions",
+          "Jenkins",
+          "Terraform"
+        ],
+
+        "Containerization & Orchestration": [
+          "Docker",
+          "Kubernetes (EKS)",
+          "Helm"
+        ],
+
+        "Databases & Data Layer": [
+          "AWS RDS",
+          "PostgreSQL",
+          "MySQL",
+          "MongoDB"
+        ],
+
+        "Monitoring & Logging": [
+          "AWS CloudWatch",
+          "Prometheus",
+          "Grafana"
+        ]
+      };
 
   const achievements = [
     { icon: <Award className="w-8 h-8" />, title: "AWS Certified Solutions Architect", year: "2024", description: "Professional cloud architecture certification" },
     { icon: <Award className="w-8 h-8" />, title: "Kubernetes Administrator", year: "2024", description: "Certified Kubernetes Administrator (CKA)" },
-    { icon: <GraduationCap className="w-8 h-8" />, title: "M.Tech in Computer Science", year: "2023", description: "Cloud Computing & Distributed Systems" },
-    { icon: <Zap className="w-8 h-8" />, title: "50+ Deployments", year: "2024", description: "Production deployments managed" }
+    { icon: <GraduationCap className="w-8 h-8" />, title: "M.Sec in Computer Science", year: "2023", description: "Cloud Computing & Distributed Systems" },
+    { icon: <Zap className="w-8 h-8" />, title: "15+ Deployments", year: "2024", description: "Production deployments managed" }
   ];
 
   const contactOptions = [
     { icon: <Mail size={18} />, label: "Email", value: "kondasandeep56@gmail.com", link: "mailto:kondasandeep56@gmail.com" },
-    { icon: <FaGithub size={18} />, label: "GitHub", value: "/thesandeepkonda", link: "https://github.com/thesandeepkonda" },
-    { icon: <FaLinkedin size={18} />, label: "LinkedIn", value: "/sandeepkonda07", link: "https://www.linkedin.com/in/sandeepkonda07" },
+    { icon: <FaGithub size={18} />, label: "GitHub", value: "/thesandeepkonda", link: "https://www.github.com/thesandeepkonda" },
+    { icon: <FaLinkedin size={18} />, label: "LinkedIn", value: "/sandeepkonda97", link: "https://www.linkedin.com/in/sandeepkonda97/" },
     { icon: <MapPin size={18} />, label: "Location", value: "Hyderabad, India", link: null }
   ];
 
@@ -158,12 +216,12 @@ export default function About() {
                 <div className="text-center">
                   <div className="text-blue-600 font-bold text-lg">🎓</div>
                   <div className="text-xs text-slate-500 font-medium">Education</div>
-                  <div className="text-sm text-slate-800 font-semibold">M.Tech</div>
+                  <div className="text-sm text-slate-800 font-semibold">M.Sc</div>
                 </div>
                 <div className="text-center">
                   <div className="text-blue-600 font-bold text-lg">⚡</div>
                   <div className="text-xs text-slate-500 font-medium">Deploys</div>
-                  <div className="text-sm text-slate-800 font-semibold">50+</div>
+                  <div className="text-sm text-slate-800 font-semibold">15+</div>
                 </div>
               </div>
 
@@ -244,13 +302,33 @@ export default function About() {
                 className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                    {category === "Cloud & DevOps" && <Cloud size={20} />}
-                    {category === "Backend Development" && <Server size={20} />}
-                    {category === "Frontend" && <Layers size={20} />}
-                    {category === "Databases" && <Database size={20} />}
-                    {category === "Monitoring & Security" && <ShieldCheck size={20} />}
-                  </div>
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+
+                  {category === "Backend Frameworks & Libraries" && (
+                    <Server size={20} />
+                  )}
+
+                  {category === "Cloud Infrastructure (AWS)" && (
+                    <Cloud size={20} />
+                  )}
+
+                  {category === "DevOps & CI/CD" && (
+                    <GitBranch size={20} />
+                  )}
+
+                  {category === "Containerization & Orchestration" && (
+                    <Boxes size={20} />
+                  )}
+
+                  {category === "Databases & Data Layer" && (
+                    <Database size={20} />
+                  )}
+
+                  {category === "Monitoring & Logging" && (
+                    <ShieldCheck size={20} />
+                  )}
+
+                </div>
                   <h3 className="text-slate-900 font-bold text-lg">{category}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">

@@ -7,11 +7,11 @@ import {
 
 // Blog images (unchanged)
 const blogImages = {
-  1: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop",
-  2: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=500&fit=crop",
-  3: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=500&fit=crop",
-  4: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=500&fit=crop",
-  5: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop"
+  1: "https://www.stjohns.in/healthscience/uploads/student-information/2-1.jpg", // ApiSynIQ
+  2: "https://miro.medium.com/1*b0CH088PsihIRV45JvAq9Q.png", // Deploying Java Microservices
+  3: "https://cdn.accelq.com/wp-content/uploads/2024/03/ci-cd-pipeline-stages.jpg", // CI/CD Pipeline
+  4: "https://media.licdn.com/dms/image/v2/D4D22AQF5aTPHVgrdDg/feedshare-shrink_800/B4DZp2BVpbGgAg-/0/1762916654570?e=2147483647&v=beta&t=Ydp2FmkHYw0TsJQaTZfYLw5VVx9VBXNUUXFkn_cmTpo", // Microservices Spring Boot
+  5: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDb974ujY_XX0_uQAjyTdt9i_gXMSZcoLMLpK4Gxe8iQ&s=10"  // Zufeto
 };
 
 export default function BlogHome() {
@@ -20,18 +20,28 @@ export default function BlogHome() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const blogPosts = [
-    {
+      {
       id: 1,
-      title: "ApiSynIQ — Talk to Your APIs",
-      excerpt: "An open-source framework that lets users interact with your APIs through natural voice or text — no forms, no JSON wrangling, just intent.",
-      date: "May 20, 2026",
-      author: "Koteshwar Chinnolla",
-      category: "Open Source",
-      path: "/blog/apisyniq",
+      title: "LMS: A Modern Approach to API Development",
+      excerpt: "Developed a robust Java Spring Boot backend for LMS, implementing secure REST APIs for user authentication, course management, student enrollment, assignments, quizzes, and progress tracking.",
+      date: "July 7, 2026",
+      author: "Sandeep Konda",
+      category: "Java Backend",
+      path: "/blog/ApiSynIQ",
       readTime: 8,
       views: 1247,
       likes: 89,
-      tags: ["Go", "Python", "Java", "gRPC", "AI", "NLP"]
+      tags: [
+        "Java",
+        "Spring Boot",
+        "Spring Security",
+        "REST API",
+        "Hibernate",
+        "JPA",
+        "JWT",
+        "MySQL",
+        "LMS"
+      ]
     },
     {
       id: 2,
