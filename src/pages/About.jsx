@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Mail,
-  MapPin,
+  Mail, MapPin,
   Award,
   Briefcase,
   GraduationCap,
@@ -305,28 +304,22 @@ export default function About() {
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
 
                   {category === "Backend Frameworks & Libraries" && (
-                    <Server size={20} />
-                  )}
+                    <Server size={20} />  )}
 
                   {category === "Cloud Infrastructure (AWS)" && (
-                    <Cloud size={20} />
-                  )}
+                    <Cloud size={20} /> )}
 
                   {category === "DevOps & CI/CD" && (
-                    <GitBranch size={20} />
-                  )}
+                    <GitBranch size={20} /> )}
 
                   {category === "Containerization & Orchestration" && (
-                    <Boxes size={20} />
-                  )}
+                    <Boxes size={20} /> )}
 
                   {category === "Databases & Data Layer" && (
-                    <Database size={20} />
-                  )}
+                    <Database size={20} /> )}
 
                   {category === "Monitoring & Logging" && (
-                    <ShieldCheck size={20} />
-                  )}
+                    <ShieldCheck size={20} /> )}
 
                 </div>
                   <h3 className="text-slate-900 font-bold text-lg">{category}</h3>

@@ -7,7 +7,7 @@ import {
 import CommentSection from '../components/CommentSection';
 
 // Blog image
-const blogImage = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop";
+const blogImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDb974ujY_XX0_uQAjyTdt9i_gXMSZcoLMLpK4Gxe8iQ&s=10";
 
 export default function Zufeto() {
   const navigate = useNavigate();

@@ -56,7 +56,7 @@ public class CourseController {
 
           <div className="flex gap-4 text-sm text-slate-500 flex-wrap">
             <span><Calendar size={14} className="inline"/> July 2026</span>
-            <span><User size={14} className="inline"/> Your Name</span>
+            <span><User size={14} className="inline"/> Sandeep Konda</span>
             <span><Clock size={14} className="inline"/> 8 min read</span>
           </div>
         </motion.section>

@@ -175,13 +175,13 @@ export default function Zufeto() {
                     <span className="text-xs text-slate-400 font-mono">network-config.yaml</span>
                   </div>
                   <pre className="p-4 text-sm text-slate-300 font-mono overflow-x-auto">
-{`# VPC Configuration
-- Custom VPC with CIDR 10.0.0.0/16
-- Public Subnets (3 AZs) for Load Balancers
-- Private Subnets (3 AZs) for ECS tasks
-- Isolated Subnets (3 AZs) for RDS
-- Internet Gateway + NAT Gateways
-- Security Groups with least-privilege access`}
+                    {`# VPC Configuration
+                    - Custom VPC with CIDR 10.0.0.0/16
+                    - Public Subnets (3 AZs) for Load Balancers
+                    - Private Subnets (3 AZs) for ECS tasks
+                    - Isolated Subnets (3 AZs) for RDS
+                    - Internet Gateway + NAT Gateways
+                    - Security Groups with least-privilege access`}
                   </pre>
                 </div>
 

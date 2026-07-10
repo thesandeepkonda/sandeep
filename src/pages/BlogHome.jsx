@@ -32,15 +32,7 @@ export default function BlogHome() {
       views: 1247,
       likes: 89,
       tags: [
-        "Java",
-        "Spring Boot",
-        "Spring Security",
-        "REST API",
-        "Hibernate",
-        "JPA",
-        "JWT",
-        "MySQL",
-        "LMS"
+        "Java", "Spring Boot", "Spring Security", "REST API","Hibernate", "JPA", "JWT", "MySQL","LMS"
       ]
     },
     {
@@ -234,8 +226,8 @@ export default function BlogHome() {
                       {/* Meta */}
                       <div className="flex flex-wrap gap-4 text-xs text-slate-500 font-mono mb-3">
                         <span className="flex items-center gap-1.5"><User size={14} /> {post.author}</span>
-                        <span className="flex items-center gap-1.5"><Calendar size={14} /> {post.date}</span>
-                        <span className="flex items-center gap-1.5"><Clock size={14} /> {post.readTime} min read</span>
+                        {/* <span className="flex items-center gap-1.5"><Calendar size={14} /> {post.date}</span>
+                        <span className="flex items-center gap-1.5"><Clock size={14} /> {post.readTime} min read</span> */}
                       </div>
 
                       {/* Title */}

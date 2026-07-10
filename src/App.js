@@ -23,11 +23,12 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/blogs" element={<BlogHome />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/blog/apisyniq" element={<ApiSynIQ />} />
-          <Route path="/blog/kubernetes-java" element={<KubernetesJava />} />
-          <Route path="/blog/devops-pipeline" element={<DevOpsPipeline />} />
-          <Route path="/blog/microservices-java" element={<MicroservicesJava />} />
           <Route path="/blog/zufeto" element={<Zufeto />} />
+          <Route path="/blog/devops-pipeline" element={<DevOpsPipeline />} />
+          <Route path="/blog/kubernetes-java" element={<KubernetesJava />} />
+          <Route path="/blog/microservices-java" element={<MicroservicesJava />} />
+          <Route path="/blog/apisyniq" element={<ApiSynIQ />} />
+         
         </Routes>
         <Footer />
       </div>
