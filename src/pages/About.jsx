@@ -109,6 +109,76 @@ export default function About() {
     show: { transition: { staggerChildren: 0.15 } },
   };
 
+const experiences = [
+  {
+    company: "Anasol Consultancy Services Pvt. Ltd.",
+    role: "Associate Software Engineer",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA4e5TAaMbBH-wgN3R5yGAnahO15HaJm3PtzEpQEnNOQ&s=10",
+    period: "Jan 2026 – Present",
+    current: true,
+
+    metrics: [
+      { icon: "🚀", title: "10+", subtitle: "Deployments" },
+      { icon: "☁️", title: "AWS", subtitle: "Cloud" },
+      { icon: "⚙️", title: "CI/CD", subtitle: "Automation" },
+      { icon: "🛒", title: "Enterprise", subtitle: "E-Commerce" }
+    ],
+
+    projects: [
+      "Pricing Engine",
+      "Coupon Approval Workflow",
+      "Tax Calculation Service",
+      "Terraform Infrastructure",
+      "AWS ECS Deployment",
+      "GitHub Actions Pipeline"
+    ],
+
+    tech: [
+      "Java",
+      "Spring Boot",
+      "AWS",
+      "Terraform",
+      "Docker",
+      "GitHub Actions",
+      "ECS",
+      "PostgreSQL"
+    ]
+  },
+
+  {
+    company: "Tanama Software Pvt. Ltd.",
+    role: "Software Engineer",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj8vP0NGxd18fquLdiGdrqbZ_skgq1yx-6dxo1mEDTSA&s=10",
+    period: "May 2021 – Dec 2022",
+    current: false,
+
+    metrics: [
+      { icon: "💻", title: "REST", subtitle: "APIs" },
+      { icon: "🗄️", title: "SQL", subtitle: "Optimization" },
+      { icon: "⚡", title: "CRUD", subtitle: "Services" },
+      { icon: "🤝", title: "Agile", subtitle: "Teamwork" }
+    ],
+
+    projects: [
+      "REST API Development",
+      "Spring Boot Applications",
+      "Database Design",
+      "Performance Optimization",
+      "Backend Maintenance",
+      "Business Logic Implementation"
+    ],
+
+    tech: [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "Spring Data JPA",
+      "MySQL",
+      "Git"
+    ]
+  }
+];
+
   return (
     <div className="w-full min-h-screen bg-slate-50 pt-32 pb-24 overflow-hidden relative">
       {/* Scroll Progress Indicator */}
@@ -130,7 +200,7 @@ export default function About() {
             About <span className="text-blue-600">Me</span>
           </h1>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
-            DevOps Engineer & Java Backend Developer passionate about cloud-native systems and AI.
+            Java Backend Developer & Cloud/DevOps Engineer passionate about building scalable backend applications, cloud-native infrastructure, and automation.
           </p>
           <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.section>
@@ -157,7 +227,7 @@ export default function About() {
               </div>
 
               <h2 className="text-2xl font-bold text-slate-900 mb-1">Sandeep Konda</h2>
-              <p className="text-blue-600 font-mono text-sm mb-6">DevOps Engineer | Java Backend Architect</p>
+              <p className="text-blue-600 font-mono text-sm mb-6">Java Backend Developer | Cloud & DevOps Engineer</p>
 
               <div className="border-t border-slate-100 pt-6 space-y-4 text-left">
                 {contactOptions.map((item, idx) => (
@@ -190,8 +260,8 @@ export default function About() {
               
               <div className="space-y-4 text-slate-600 leading-relaxed flex-grow">
                 <p>
-                  Engineer, researcher, and lifelong tinkerer building systems that <strong className="text-blue-600">sense, reason, and act</strong> — 
-                  at the intersection of DevOps, Java Backend, and Cloud Infrastructure.
+                  I'm a Java Backend Developer with over 2 years of experience building scalable that <strong className="text-blue-600">Spring Boot applications and cloud-native solutions on AWS.</strong> — 
+                 I enjoy designing REST APIs, automating infrastructure with Terraform, and building reliable CI/CD pipelines using GitHub Actions and Docker.
                 </p>
                 <p>
                   I bridge the gap between infrastructure and application logic, ensuring systems are not just functional, 
@@ -248,6 +318,183 @@ export default function About() {
             </div>
           </motion.div>
         </motion.div>
+
+
+{/* ================= EXPERIENCE ================= */}
+
+<motion.section
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, margin: "-100px" }}
+  variants={fadeUp}
+  className="mb-20"
+>
+
+  <h2 className="text-4xl font-black text-center text-slate-900 mb-4">
+    Professional <span className="text-blue-600">Experience</span>
+  </h2>
+
+  <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-12" />
+
+  <div className="space-y-10">
+
+    {experiences.map((exp, index) => (
+
+      <motion.div
+        key={index}
+        variants={fadeUp}
+        whileHover={{ y: -6 }}
+        className="bg-white rounded-3xl border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden"
+      >
+
+        {/* Header */}
+
+        <div className="p-8 border-b border-slate-100">
+
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+
+            <div className="flex items-center gap-5">
+
+              <div className="w-18 h-16 rounded-1xl bg-white border border-slate-200 shadow-lg flex items-center justify-center p-0">
+              <img
+                src={exp.logo}
+                alt={exp.company}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+              <div>
+
+                <h3 className="text-2xl font-bold text-slate-900">
+                  {exp.role}
+                </h3>
+
+                <p className="text-blue-600 font-semibold text-lg">
+                  {exp.company}
+                </p>
+
+              </div>
+
+            </div>
+
+            <div className="text-right">
+
+              <p className="font-semibold text-slate-700">
+                {exp.period}
+              </p>
+
+              {exp.current && (
+                <span className="inline-flex mt-2 px-4 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold animate-pulse">
+                  ● Current
+                </span>
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Metrics */}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 p-8">
+
+          {exp.metrics.map((item, i) => (
+
+            <div
+              key={i}
+              className="rounded-2xl bg-slate-50 p-5 text-center hover:bg-blue-50 transition"
+            >
+
+              <div className="text-3xl mb-2">
+                {item.icon}
+              </div>
+
+              <div className="font-bold text-lg text-slate-900">
+                {item.title}
+              </div>
+
+              <div className="text-sm text-slate-500">
+                {item.subtitle}
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        {/* Content */}
+
+        <div className="grid lg:grid-cols-2 gap-10 p-8 pt-0">
+
+          {/* Projects */}
+
+          <div>
+
+            <h4 className="font-bold text-xl text-slate-900 mb-5">
+              🚀 What I Built
+            </h4>
+
+            <div className="space-y-3">
+
+              {exp.projects.map((project) => (
+
+                <div
+                  key={project}
+                  className="flex items-center gap-3"
+                >
+
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+
+                  <span className="text-slate-600">
+                    {project}
+                  </span>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* Tech */}
+
+          <div>
+
+            <h4 className="font-bold text-xl text-slate-900 mb-5">
+              💻 Tech Stack
+            </h4>
+
+            <div className="flex flex-wrap gap-3">
+
+              {exp.tech.map((tech) => (
+
+                <span
+                  key={tech}
+                  className="px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-semibold text-sm hover:bg-blue-100 transition"
+                >
+                  {tech}
+                </span>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </motion.div>
+
+    ))}
+
+  </div>
+
+</motion.section>
+
+
 
         {/* ---- ACHIEVEMENTS ---- */}
         <motion.section
@@ -336,7 +583,7 @@ export default function About() {
           </motion.div>
         </motion.section>
 
-        {/* ---- RESEARCH INTERESTS ---- */}
+        {/* ---- CORE EXPERTISE ---- */}
         <motion.section
           initial="hidden"
           whileInView="show"
@@ -345,7 +592,7 @@ export default function About() {
           className="mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight text-center mb-4">
-            Research <span className="text-blue-600">Interests</span>
+            Core <span className="text-blue-600">Expertise</span>
           </h2>
           <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
 
@@ -394,8 +641,8 @@ export default function About() {
                 🌟 Open To
               </h2>
               <div className="flex flex-wrap justify-center gap-4 text-white/90 text-lg font-medium">
-                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🎓 Graduate Research</span>
-                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🤝 Engineering Collaborations</span>
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">💼 Java Backend Developer Roles</span>
+                <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">☁️ Cloud & DevOps Engineer Opportunities</span>
                 <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">💬 Technical Conversations</span>
                 <span className="bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">🚀 Open Source</span>
               </div>
