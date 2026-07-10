@@ -262,7 +262,7 @@ jobs:
                     <span className="text-xl">🚀</span> REAL PIPELINE STATS
                   </div>
                   <div className="flex flex-wrap gap-4 text-slate-700 text-sm">
-                    <span>15+ builds daily</span>
+                    <span>10+ builds daily</span>
                     <span>4 min build time</span>
                     <span>90 sec deployment</span>
                   </div>

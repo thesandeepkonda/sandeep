@@ -120,7 +120,7 @@ export default function HomePage() {
             { label: 'DevOps & Cloud', icon: <Cloud size={14} /> },
             { label: 'Java Backend', icon: <Server size={14} /> },
             { label: '2+ Years Exp', icon: <Sparkles size={14} /> },
-            { label: '15+ Deploys', icon: <CheckCircle size={14} /> },
+            { label: '10+ Deploys', icon: <CheckCircle size={14} /> },
             { label: '99.99% Uptime', icon: <CheckCircle size={14} /> },
           ].map((item, idx) => (
             <span
@@ -142,7 +142,7 @@ export default function HomePage() {
             <Mail size={18} /> Let's Connect
           </Link>
           <a
-            href="/resume.pdf"
+            href="https://sandeepkonda.site/Sandeep_Konda_Resume1.pdf"
             target="_blank"
             rel="noreferrer"
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-blue-500 text-slate-700 px-8 py-3.5 rounded-xl font-bold transition-all hover:-translate-y-0.5 shadow-sm"
@@ -287,16 +287,16 @@ export default function HomePage() {
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-[120px] opacity-20 pointer-events-none" />
 
           <h2 className="text-3xl md:text-5xl font-black text-white mb-6 relative z-10 tracking-tight">
-            Ready to collaborate?
+            Open to New Opportunities
           </h2>
           <p className="text-white/80 max-w-2xl mx-auto text-lg md:text-xl relative z-10 mb-10">
-            Whether you need robust cloud infrastructure, a scalable backend, or a full‑stack solution—let's build it together.
+            I'm looking for exciting opportunities where I can contribute my experience in Java, Spring Boot, AWS, Terraform, Docker, Kubernetes, and CI/CD while continuing to grow as a software engineer.
           </p>
           <Link
             to="/contact"
             className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-extrabold transition-all relative z-10 shadow-lg hover:shadow-white/30 hover:-translate-y-1"
           >
-            Start a Conversation <ArrowRight size={20} />
+            Contact Me <ArrowRight size={20} />
           </Link>
         </div>
       </motion.section>

@@ -86,10 +86,10 @@ export default function About() {
       };
 
   const achievements = [
-    { icon: <Award className="w-8 h-8" />, title: "AWS Certified Solutions Architect", year: "2024", description: "Professional cloud architecture certification" },
-    { icon: <Award className="w-8 h-8" />, title: "Kubernetes Administrator", year: "2024", description: "Certified Kubernetes Administrator (CKA)" },
-    { icon: <GraduationCap className="w-8 h-8" />, title: "M.Sec in Computer Science", year: "2023", description: "Cloud Computing & Distributed Systems" },
-    { icon: <Zap className="w-8 h-8" />, title: "15+ Deployments", year: "2024", description: "Production deployments managed" }
+    { icon: <Award className="w-8 h-8" />, title: "AWS Certified Solutions Architect", year: "2025", description: "Professional cloud architecture certification" },
+    { icon: <Award className="w-8 h-8" />, title: "Azure fundamentals", year: "2025", description: "Certified microsoft Azure fundamentals" },
+    { icon: <GraduationCap className="w-8 h-8" />, title: "M.Sc in Computer Science", year: "2021", description: "Cloud Computing & Distributed Systems" },
+    { icon: <Zap className="w-8 h-8" />, title: "10+ Deployments", year: "2026", description: "Production deployments" }
   ];
 
   const contactOptions = [
@@ -220,7 +220,7 @@ export default function About() {
                 <div className="text-center">
                   <div className="text-blue-600 font-bold text-lg">⚡</div>
                   <div className="text-xs text-slate-500 font-medium">Deploys</div>
-                  <div className="text-sm text-slate-800 font-semibold">15+</div>
+                  <div className="text-sm text-slate-800 font-semibold">10+</div>
                 </div>
               </div>
 
@@ -239,7 +239,7 @@ export default function About() {
                   <FaGithub size={18} /> GitHub
                 </button>
                 <button
-                  onClick={() => window.open('/resume.pdf', '_blank')}
+                  onClick={() => window.open('https://sandeepkonda.site/Sandeep_Konda_Resume1.pdf', '_blank')}
                   className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-blue-500 text-slate-700 px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-0.5"
                 >
                   <Sparkles size={18} /> Resume
@@ -351,9 +351,19 @@ export default function About() {
 
           <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: "🧠", title: "Agentic AI", desc: "Autonomous agents, decision-making systems, and multi-agent coordination" },
-              { icon: "🤖", title: "Robotics", desc: "Control systems, robot perception, and autonomous navigation" },
-              { icon: "🚀", title: "Reinforcement Learning", desc: "Deep RL, policy optimization, and real-world applications" }
+              {
+                icon: "💻",
+                title: "Java & Spring Boot",
+                desc: "Enterprise backend development with REST APIs, Spring Security, JPA, Hibernate, and PostgreSQL." },
+              {
+                icon: "☁️",
+                title: "AWS & Terraform",
+                desc: "Cloud-native infrastructure using ECS, EKS, RDS, VPC, ALB, IAM, Route 53, and Infrastructure as Code."  },
+              {
+                icon: "🐳",
+                title: "DevOps Automation",
+                desc: "CI/CD pipelines with GitHub Actions, Docker, Kubernetes, Helm, CloudWatch, Prometheus, and Grafana."
+              }
             ].map((item, idx) => (
               <motion.div
                 key={idx}
