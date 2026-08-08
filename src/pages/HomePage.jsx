@@ -15,7 +15,7 @@ const EXPERTISE = [
   {
     icon: <Cloud className="w-8 h-8" />,
     title: 'DevOps & Cloud',
-    desc: 'Designing highly available infrastructure using AWS, Terraform, Kubernetes, Docker, and automated CI/CD pipelines.',
+    desc: 'Designing highly available infrastructure using AWS, Terraform, Github Actions, Kubernetes, Docker, and automated CI/CD pipelines.',
   },
   {
     icon: <Server className="w-8 h-8" />,
