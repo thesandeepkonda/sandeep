@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FileText, Mail, Cloud, Server, Layers, FolderDot,
-  ArrowRight, Terminal, CheckCircle, Github, Sparkles
-} from 'lucide-react';
-import { FaGithub } from 'react-icons/fa';
-import { blogPosts } from '../data/blogData'; // adjust path as needed
-import {
+  FileText,
+  Mail,
+  Cloud,
+  Server,
+  Layers,
+  FolderDot,
   ArrowRight,
   Terminal,
   CheckCircle,
   Sparkles
 } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa';
+import { blogPosts } from '../data/blogData'; // adjust path as needed
 
 const fullName = 'Sandeep Konda';
 const TITLES = ['DevOps Engineer', 'Java Backend Architect', 'Cloud Native Developer'];
