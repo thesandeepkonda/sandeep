@@ -7,6 +7,12 @@ import {
 } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import { blogPosts } from '../data/blogData'; // adjust path as needed
+import {
+  ArrowRight,
+  Terminal,
+  CheckCircle,
+  Sparkles
+} from 'lucide-react';
 
 const fullName = 'Sandeep Konda';
 const TITLES = ['DevOps Engineer', 'Java Backend Architect', 'Cloud Native Developer'];
