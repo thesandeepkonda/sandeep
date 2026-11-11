@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandeep Konda | Cloud & DevOps Engineer</title>
+  <meta name="description" content="Sandeep Konda - Cloud and DevOps Engineer Portfolio">
+  
+  <!-- Fonts: Inter for Body, Fira Code for Code/Tech Stacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            navy: {
+              900: '#0a192f', // Deep navy
+              800: '#112240', // Lighter navy card
+              700: '#233554', // Border/Hover navy
+            },
+            accent: {
+              cyan: '#64ffda', // Neon cyan
+              blue: '#3b82f6',
+            },
+            slate: {
+              light: '#ccd6f6',
+              DEFAULT: '#8892b0',
+              dark: '#495670',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #0a192f;
+      color: #8892b0;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      color: #ccd6f6;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a192f; }
+    ::-webkit-scrollbar-thumb { background: #495670; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #8892b0; }
+
+    /* Custom Animations & Hover Effects */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Interactive Elements */
+    .skill-badge {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+    .skill-badge:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
+      border-color: #64ffda;
+      color: #64ffda;
+      background-color: rgba(100, 255, 218, 0.05);
+    }
+
+    .project-card {
+      transition: all 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 20px 30px -15px rgba(2, 12, 27, 0.7), 0 0 15px rgba(100, 255, 218, 0.1);
+      border-color: rgba(100, 255, 218, 0.5);
+    }
+
+    .timeline-dot {
+      transition: all 0.3s ease;
+    }
+    .timeline-item:hover .timeline-dot {
+      background-color: #64ffda;
+      box-shadow: 0 0 10px #64ffda;
+      border-color: #0a192f;
+    }
+    
+    .nav-btn {
+      transition: all 0.3s ease;
+    }
+    .nav-btn:hover {
+      box-shadow: 4px 4px 0 0 #64ffda;
+      transform: translate(-2px, -2px);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: white !important;
+        color: #111 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 12px;
+      }
+      * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+        transition: none !important;
+        transform: none !important;
+      }
+      h1, h2, h3, h4, h5, h6 { color: #000 !important; }
+      .text-accent-cyan { color: #0369a1 !important; }
+      .bg-navy-900, .bg-navy-800 { background: white !important; }
+      .border-navy-700 { border-color: #ccc !important; }
+      
+      .no-print { display: none !important; }
+      
+      main {
+        max-width: 100% !important;
+        padding: 20px !important;
+      }
+      
+      section {
+        page-break-inside: avoid;
+        margin-bottom: 20px !important;
+        padding: 0 !important;
+      }
+      
+      .fade-in { opacity: 1 !important; transform: none !important; }
+      
+      .project-card, .skill-badge {
+        border: 1px solid #ccc !important;
+        background: transparent !important;
+        color: #333 !important;
+        padding: 10px !important;
+      }
+      
+      .skill-badge { padding: 4px 8px !important; }
+      
+      /* Reformat header for print */
+      #hero {
+        min-height: auto !important;
+        padding: 0 !important;
+        margin-bottom: 20px !important;
+      }
+      #hero h1 { font-size: 24pt !important; }
+      #hero h2 { font-size: 16pt !important; }
+      #hero p { max-width: 100% !important; margin-bottom: 10px !important; }
+      
+      .contact-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .contact-links a {
+        color: #333 !important;
+        text-decoration: none;
+      }
+      .contact-links i { margin-right: 5px; }
+      
+      .grid { display: block !important; }
+      .project-card { margin-bottom: 15px; }
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-accent-cyan selection:text-navy-900">
+
+  <!-- Navigation / Header -->
+  <nav class="no-print fixed w-full top-0 z-50 bg-navy-900/80 backdrop-blur-md border-b border-navy-700 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="text-accent-cyan font-mono text-xl font-bold tracking-tighter">SK<span class="text-slate-light">.dev</span></a>
+      <div class="flex gap-4">
+        <button onclick="window.print()" class="nav-btn border border-accent-cyan text-accent-cyan font-mono text-sm px-4 py-2 rounded rounded-sm bg-accent-cyan/10">
+          <i class="fas fa-file-pdf mr-2"></i>Resume
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 md:px-12 lg:px-24">
+    
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center pt-24 pb-12 fade-in">
+      <div class="print:hidden">
+        <p class="text-accent-cyan font-mono mb-5 text-sm md:text-base">Hi, my name is</p>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold text-slate-light mb-4 tracking-tight">Sandeep Konda.</h1>
+      <h2 class="text-3xl md:text-5xl font-bold text-slate mb-6 tracking-tight">Cloud / DevOps Engineer.</h2>
+      
+      <p class="max-w-2xl text-slate text-base md:text-lg leading-relaxed mb-10">
+        Cloud & DevOps Engineer with 3+ years of experience in AWS cloud infrastructure, DevOps, CI/CD automation, and Java/Spring Boot development. Passionate about designing, provisioning, and deploying scalable, secure, and repeatable cloud-native applications.
+      </p>
+
+      <div class="contact-links flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 font-mono text-sm">
+        <a href="mailto:kondasandeep56@gmail.com" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
+          <i class="fas fa-envelope text-accent-cyan mr-2 text-lg"></i> kondasandeep56@gmail.com
+        </a>
+        <a href="tel:+918008806996" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
+          <i class="fas fa-phone-alt text-accent-cyan mr-2 text-lg"></i> +91 8008806996
+        </a>
+        <a href="https://github.com/thesandeepkonda" target="_blank" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
+          <i class="fab fa-github text-accent-cyan mr-2 text-lg"></i> thesandeepkonda
+        </a>
+        <a href="https://www.linkedin.com/in/thesandeepkonda/" target="_blank" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
+          <i class="fab fa-linkedin text-accent-cyan mr-2 text-lg"></i> thesandeepkonda
+        </a>
+        <div class="hidden print:flex items-center text-slate">
+          <i class="fas fa-map-marker-alt text-accent-cyan mr-2"></i> Hyderabad, Telangana, India
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Competencies Section -->
+    <section id="skills" class="py-16 md:py-24 fade-in">
+      <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
+        <span class="text-accent-cyan font-mono text-xl mr-3">01.</span> Core Competencies
+        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+      </h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- AWS Cloud Infrastructure -->
+        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+          <h4 class="text-slate-light font-semibold mb-4 flex items-center">
+            <i class="fab fa-aws text-accent-cyan text-xl mr-3 w-6 text-center"></i> AWS Cloud Infrastructure
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EC2</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">VPC</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EKS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ECS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ECR</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">RDS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ALB</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Auto Scaling</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">S3</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Route 53</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CloudFront</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ACM</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">IAM</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CloudWatch</span>
+          </div>
+        </div>
+
+        <!-- DevOps & CI/CD -->
+        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+          <h4 class="text-slate-light font-semibold mb-4 flex items-center">
+            <i class="fas fa-infinity text-accent-cyan text-xl mr-3 w-6 text-center"></i> DevOps & CI/CD
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Terraform (IaC)</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">GitHub Actions</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Git & GitHub</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CI/CD Automation</span>
+          </div>
+        </div>
+
+        <!-- Containerization & Orchestration -->
+        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+          <h4 class="text-slate-light font-semibold mb-4 flex items-center">
+            <i class="fab fa-docker text-accent-cyan text-xl mr-3 w-6 text-center"></i> Containerization
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Docker</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Kubernetes</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Amazon EKS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Amazon ECS</span>
+          </div>
+        </div>
+
+        <!-- Backend, DB & Monitoring -->
+        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+          <h4 class="text-slate-light font-semibold mb-4 flex items-center">
+            <i class="fas fa-server text-accent-cyan text-xl mr-3 w-6 text-center"></i> Backend & Data
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Java</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Spring Boot</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">PostgreSQL</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">MySQL</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">MongoDB</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Prometheus</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Grafana</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Professional Experience Section -->
+    <section id="experience" class="py-16 md:py-24 fade-in">
+      <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
+        <span class="text-accent-cyan font-mono text-xl mr-3">02.</span> Experience
+        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+      </h3>
+
+      <div class="relative border-l-2 border-navy-700 ml-3 md:ml-6 mt-8 space-y-12">
+        
+        <!-- Job 1 -->
+        <div class="relative pl-8 md:pl-12 timeline-item">
+          <div class="timeline-dot absolute w-4 h-4 bg-navy-900 border-2 border-accent-cyan rounded-full -left-[9px] top-1"></div>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
+            <h4 class="text-xl font-semibold text-slate-light">
+              Associate Software Engineer <span class="text-accent-cyan">@ Anasol Consultancy</span>
+            </h4>
+            <span class="font-mono text-sm text-slate-dark whitespace-nowrap mt-1 md:mt-0">01/2025 – Present</span>
+          </div>
+          <ul class="list-none space-y-3 mt-4 text-sm text-slate">
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Provision and manage AWS infrastructure using Terraform, including VPC, ECS, EC2, RDS PostgreSQL, ALB, S3, CloudFront, Route 53, and ACM.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Implement and maintain Infrastructure as Code (IaC) using reusable Terraform modules to automate and standardise AWS resource provisioning.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Automate CI/CD workflows using GitHub Actions for Docker image builds, Amazon ECR publishing, and Amazon ECS application deployments.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Containerise Spring Boot applications using Docker and configure ECS services, EC2 Auto Scaling, ALB routing, health checks, IAM roles.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Troubleshoot infrastructure, deployments, networking, and CI/CD pipelines using CloudWatch.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="relative pl-8 md:pl-12 timeline-item">
+          <div class="timeline-dot absolute w-4 h-4 bg-navy-900 border-2 border-slate-dark rounded-full -left-[9px] top-1"></div>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
+            <h4 class="text-xl font-semibold text-slate-light">
+              Software Engineer <span class="text-accent-cyan">@ Tanama Software</span>
+            </h4>
+            <span class="font-mono text-sm text-slate-dark whitespace-nowrap mt-1 md:mt-0">05/2021 – 12/2022</span>
+          </div>
+          <ul class="list-none space-y-3 mt-4 text-sm text-slate">
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Developed and maintained backend applications using Java, Spring Boot, and OOP principles.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Built and integrated RESTful APIs with CRUD operations using Spring Data JPA, Hibernate, and JDBC.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Designed database entities, repository layers, and business logic to support enterprise application requirements.
+            </li>
+            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
+              Debugged issues, optimised SQL queries, and improved application performance and reliability in an Agile/Scrum environment.
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 md:py-24 fade-in">
+      <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
+        <span class="text-accent-cyan font-mono text-xl mr-3">03.</span> Featured Projects
+        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+        
+        <!-- Project 1 -->
+        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+          <div class="flex justify-between items-center mb-6">
+            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+          </div>
+          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">SVMart</h4>
+          <p class="text-xs font-mono text-accent-cyan mb-3">Cloud-Native Quick-Commerce & DevOps Automation</p>
+          <p class="text-sm text-slate mb-6 flex-grow">
+            Designed AWS infrastructure using Terraform (VPC, EC2 ASG, ECS, ALB, RDS). Implemented GitHub Actions CI/CD to build Docker images, publish to ECR, and deploy to ECS. Configured Route 53, ACM, and CloudFront.
+          </p>
+          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
+            <li>Terraform</li><li>AWS ECS</li><li>GitHub Actions</li><li>Docker</li><li>Spring Boot</li>
+          </ul>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+          <div class="flex justify-between items-center mb-6">
+            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+          </div>
+          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">Zufeto</h4>
+          <p class="text-xs font-mono text-accent-cyan mb-3">Cloud-Native AWS ECS Deployment & CI/CD</p>
+          <p class="text-sm text-slate mb-6 flex-grow">
+            Containerised Spring Boot monolith using Docker. Provisioned VPC, ECS, ALB, and RDS using Terraform. Automated deployments via GitHub Actions to ECR and ECS. Managed domain routing and SSL via Route 53/ACM.
+          </p>
+          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
+            <li>Docker</li><li>AWS ECR</li><li>Terraform</li><li>ALB</li><li>PostgreSQL</li>
+          </ul>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+          <div class="flex justify-between items-center mb-6">
+            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+          </div>
+          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">Wellbeing</h4>
+          <p class="text-xs font-mono text-accent-cyan mb-3">Healthcare & Wellness Platform Deployment</p>
+          <p class="text-sm text-slate mb-6 flex-grow">
+            Provisioned infrastructure (VPC, ECS, EC2, RDS, ALB) using Terraform. Automated Docker build and ECR publishing via GitHub Actions. Configured CloudWatch monitoring and troubleshot networking & runtime issues.
+          </p>
+          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
+            <li>Java</li><li>Docker</li><li>Terraform</li><li>AWS ECS</li><li>CloudWatch</li>
+          </ul>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+          <div class="flex justify-between items-center mb-6">
+            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+          </div>
+          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">JJR Organics</h4>
+          <p class="text-xs font-mono text-accent-cyan mb-3">E-Commerce Platform Backend</p>
+          <p class="text-sm text-slate mb-6 flex-grow">
+            Developed a robust Spring Boot e-commerce backend with RESTful APIs for cart and order management. Implemented database integration using Spring Data JPA/Hibernate and secured APIs with Spring Security (RBAC).
+          </p>
+          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
+            <li>Java</li><li>Spring Boot</li><li>Spring Security</li><li>JPA/Hibernate</li><li>PostgreSQL</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Education & Certifications Section -->
+    <section id="edu-certs" class="py-16 md:py-24 fade-in">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        
+        <!-- Education -->
+        <div>
+          <h3 class="flex items-center text-2xl font-bold text-slate-light mb-8 whitespace-nowrap">
+            <span class="text-accent-cyan font-mono text-xl mr-3">04.</span> Education
+          </h3>
+          <div class="relative pl-6 border-l border-navy-700">
+            <div class="absolute w-3 h-3 bg-navy-900 border-2 border-accent-cyan rounded-full -left-[6px] top-1"></div>
+            <h4 class="text-lg font-semibold text-slate-light">B.Tech in Computer Science and Engineering</h4>
+            <p class="text-sm text-slate mt-1">Aurora's Scientific, Technological and Research Academy</p>
+            <p class="text-xs font-mono text-slate-dark mt-2">2015 – 2019 | Hyderabad, India</p>
+          </div>
+        </div>
+
+        <!-- Certifications -->
+        <div>
+          <h3 class="flex items-center text-2xl font-bold text-slate-light mb-8 whitespace-nowrap">
+            <span class="text-accent-cyan font-mono text-xl mr-3">05.</span> Certifications
+          </h3>
+          <ul class="space-y-6">
+            <li class="bg-navy-800/50 p-4 rounded-lg border border-navy-700 flex items-start">
+              <i class="fab fa-aws text-accent-cyan text-3xl mr-4 mt-1"></i>
+              <div>
+                <h4 class="text-base font-semibold text-slate-light">AWS Certified Solutions Architect – Associate</h4>
+                <p class="text-sm text-slate mt-1">Amazon Web Services (AWS)</p>
+              </div>
+            </li>
+            <li class="bg-navy-800/50 p-4 rounded-lg border border-navy-700 flex items-start">
+              <i class="fab fa-windows text-blue-400 text-3xl mr-4 mt-1"></i>
+              <div>
+                <h4 class="text-base font-semibold text-slate-light">Microsoft Certified: AWS Fundamentals</h4>
+                <p class="text-sm text-slate mt-1">Microsoft</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-sm font-mono text-slate-dark flex flex-col items-center">
+      <div class="mb-4">
+        Built with <i class="fas fa-heart text-accent-cyan mx-1"></i> by Sandeep Konda
+      </div>
+      <div class="flex gap-4">
+        <span class="text-xs border border-navy-700 px-2 py-1 rounded">English - Fluent</span>
+        <span class="text-xs border border-navy-700 px-2 py-1 rounded">Telugu - Native</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- JavaScript for Scroll Animations -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // Stop observing once it's visible
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.fade-in').forEach(element => {
+        observer.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>
