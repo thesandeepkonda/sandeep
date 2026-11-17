@@ -34,7 +34,7 @@
               700: '#233554', // Border/Hover navy
             },
             accent: {
-              cyan: '#64ffda', // Neon cyan
+              cyan: '#38bdf8', // Updated to match the React Sky Blue accent
               blue: '#3b82f6',
             },
             slate: {
@@ -51,8 +51,9 @@
   <style>
     /* Global Styles */
     body {
-      background-color: #0a192f;
+      background-color: #080d1a;
       color: #8892b0;
+      overflow-x: hidden;
     }
     
     h1, h2, h3, h4, h5, h6 {
@@ -61,9 +62,9 @@
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0a192f; }
-    ::-webkit-scrollbar-thumb { background: #495670; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #8892b0; }
+    ::-webkit-scrollbar-track { background: #080d1a; }
+    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
 
     /* Custom Animations & Hover Effects */
     .fade-in {
@@ -76,34 +77,69 @@
       transform: translateY(0);
     }
 
+    /* Bouncing Scroll Arrow */
+    @keyframes bounce-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+    .animate-bounce-subtle {
+      animation: bounce-subtle 2s infinite ease-in-out;
+    }
+
     /* Interactive Elements */
     .skill-badge {
       transition: all 0.3s ease;
-      border: 1px solid rgba(100, 255, 218, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.1);
     }
     .skill-badge:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
-      border-color: #64ffda;
-      color: #64ffda;
-      background-color: rgba(100, 255, 218, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background-color: rgba(56, 189, 248, 0.05);
     }
 
-    .project-card {
-      transition: all 0.3s ease;
+    /* Enhanced Interactive Card */
+    .interactive-card {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
     }
-    .project-card:hover {
-      transform: translateY(-7px);
-      box-shadow: 0 20px 30px -15px rgba(2, 12, 27, 0.7), 0 0 15px rgba(100, 255, 218, 0.1);
-      border-color: rgba(100, 255, 218, 0.5);
+    .interactive-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: inherit;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0);
+      transition: box-shadow 0.4s ease;
+      pointer-events: none;
+    }
+    .interactive-card:hover {
+      transform: translateY(-5px);
+      background-color: rgba(255, 255, 255, 0.02);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .interactive-card:hover::before {
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.15) inset;
+    }
+    .interactive-card .skill-details {
+      max-height: 0;
+      opacity: 0;
+      transition: all 0.4s ease;
+      overflow: hidden;
+    }
+    .interactive-card:hover .skill-details {
+      max-height: 150px;
+      opacity: 1;
+      margin-top: 12px;
     }
 
     .timeline-dot {
       transition: all 0.3s ease;
     }
     .timeline-item:hover .timeline-dot {
-      background-color: #64ffda;
-      box-shadow: 0 0 10px #64ffda;
+      background-color: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
       border-color: #0a192f;
     }
     
@@ -111,89 +147,33 @@
       transition: all 0.3s ease;
     }
     .nav-btn:hover {
-      box-shadow: 4px 4px 0 0 #64ffda;
+      box-shadow: 4px 4px 0 0 #38bdf8;
       transform: translate(-2px, -2px);
     }
 
-    /* Print Styles */
-    @media print {
-      body {
-        background-color: white !important;
-        color: #111 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        font-size: 12px;
-      }
-      * {
-        box-shadow: none !important;
-        text-shadow: none !important;
-        transition: none !important;
-        transform: none !important;
-      }
-      h1, h2, h3, h4, h5, h6 { color: #000 !important; }
-      .text-accent-cyan { color: #0369a1 !important; }
-      .bg-navy-900, .bg-navy-800 { background: white !important; }
-      .border-navy-700 { border-color: #ccc !important; }
-      
-      .no-print { display: none !important; }
-      
-      main {
-        max-width: 100% !important;
-        padding: 20px !important;
-      }
-      
-      section {
-        page-break-inside: avoid;
-        margin-bottom: 20px !important;
-        padding: 0 !important;
-      }
-      
-      .fade-in { opacity: 1 !important; transform: none !important; }
-      
-      .project-card, .skill-badge {
-        border: 1px solid #ccc !important;
-        background: transparent !important;
-        color: #333 !important;
-        padding: 10px !important;
-      }
-      
-      .skill-badge { padding: 4px 8px !important; }
-      
-      /* Reformat header for print */
-      #hero {
-        min-height: auto !important;
-        padding: 0 !important;
-        margin-bottom: 20px !important;
-      }
-      #hero h1 { font-size: 24pt !important; }
-      #hero h2 { font-size: 16pt !important; }
-      #hero p { max-width: 100% !important; margin-bottom: 10px !important; }
-      
-      .contact-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-      }
-      .contact-links a {
-        color: #333 !important;
-        text-decoration: none;
-      }
-      .contact-links i { margin-right: 5px; }
-      
-      .grid { display: block !important; }
-      .project-card { margin-bottom: 15px; }
+    /* Background Grid */
+    .grid-bg {
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
     }
   </style>
 </head>
 
-<body class="font-sans antialiased selection:bg-accent-cyan selection:text-navy-900">
+<body class="font-sans antialiased selection:bg-accent-cyan selection:text-navy-900 relative">
+
+  <!-- Background Grid Effect -->
+  <div class="fixed inset-0 grid-bg opacity-60 pointer-events-none z-[-1]"></div>
 
   <!-- Navigation / Header -->
-  <nav class="no-print fixed w-full top-0 z-50 bg-navy-900/80 backdrop-blur-md border-b border-navy-700 transition-all duration-300">
+  <nav class="no-print fixed w-full top-0 z-50 bg-[#080d1a]/80 backdrop-blur-md border-b border-white/10 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="#" class="text-accent-cyan font-mono text-xl font-bold tracking-tighter">SK<span class="text-slate-light">.dev</span></a>
+      <a href="#" class="text-white font-mono text-xl font-bold tracking-tighter">
+        <span class="text-accent-cyan">&gt;</span> Sandeep Konda
+      </a>
       <div class="flex gap-4">
-        <button onclick="window.print()" class="nav-btn border border-accent-cyan text-accent-cyan font-mono text-sm px-4 py-2 rounded rounded-sm bg-accent-cyan/10">
+        <button onclick="window.print()" class="nav-btn border border-accent-cyan text-accent-cyan font-mono text-sm px-4 py-2 rounded bg-accent-cyan/10">
           <i class="fas fa-file-pdf mr-2"></i>Resume
         </button>
       </div>
@@ -203,18 +183,20 @@
   <main class="max-w-5xl mx-auto px-6 md:px-12 lg:px-24">
     
     <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex flex-col justify-center pt-24 pb-12 fade-in">
+    <section id="hero" class="min-h-screen flex flex-col justify-center pt-24 pb-12 fade-in relative">
       <div class="print:hidden">
-        <p class="text-accent-cyan font-mono mb-5 text-sm md:text-base">Hi, my name is</p>
+        <p class="text-accent-cyan font-mono mb-5 text-sm md:text-base tracking-[0.2em] uppercase">
+          Cloud Operations & DevOps Engineering
+        </p>
       </div>
       <h1 class="text-5xl md:text-7xl font-bold text-slate-light mb-4 tracking-tight">Sandeep Konda.</h1>
-      <h2 class="text-3xl md:text-5xl font-bold text-slate mb-6 tracking-tight">Cloud / DevOps Engineer.</h2>
+      <h2 class="text-3xl md:text-5xl font-bold text-slate mb-6 tracking-tight">Building reliable cloud infrastructure.</h2>
       
       <p class="max-w-2xl text-slate text-base md:text-lg leading-relaxed mb-10">
-        Cloud & DevOps Engineer with 3+ years of experience in AWS cloud infrastructure, DevOps, CI/CD automation, and Java/Spring Boot development. Passionate about designing, provisioning, and deploying scalable, secure, and repeatable cloud-native applications.
+        AWS Cloud Operations Engineer with 3+ years of experience in AWS cloud infrastructure, DevOps, CI/CD automation, and Java/Spring Boot development. Passionate about designing, provisioning, and deploying scalable, secure, and repeatable cloud-native applications.
       </p>
 
-      <div class="contact-links flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 font-mono text-sm">
+      <div class="contact-links flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 font-mono text-sm mb-16">
         <a href="mailto:kondasandeep56@gmail.com" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
           <i class="fas fa-envelope text-accent-cyan mr-2 text-lg"></i> kondasandeep56@gmail.com
         </a>
@@ -224,86 +206,84 @@
         <a href="https://github.com/thesandeepkonda" target="_blank" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
           <i class="fab fa-github text-accent-cyan mr-2 text-lg"></i> thesandeepkonda
         </a>
-        <a href="https://www.linkedin.com/in/thesandeepkonda/" target="_blank" class="flex items-center text-slate hover:text-accent-cyan transition-colors">
-          <i class="fab fa-linkedin text-accent-cyan mr-2 text-lg"></i> thesandeepkonda
-        </a>
-        <div class="hidden print:flex items-center text-slate">
-          <i class="fas fa-map-marker-alt text-accent-cyan mr-2"></i> Hyderabad, Telangana, India
-        </div>
       </div>
+
+      <!-- Animated Scroll Arrow -->
+      <a href="#skills" class="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce-subtle text-slate-dark hover:text-accent-cyan transition-colors no-print group">
+        <span class="text-[10px] font-mono tracking-[0.2em] mb-2 uppercase group-hover:text-accent-cyan">Scroll</span>
+        <i class="fas fa-chevron-down text-lg"></i>
+      </a>
     </section>
 
-    <!-- Core Competencies Section -->
+    <!-- Interactive Core Competencies Section -->
     <section id="skills" class="py-16 md:py-24 fade-in">
-      <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
+      <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-4 whitespace-nowrap">
         <span class="text-accent-cyan font-mono text-xl mr-3">01.</span> Core Competencies
-        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+        <span class="w-full h-[1px] bg-white/10 ml-6 relative top-1"></span>
       </h3>
+      <p class="text-slate-500 mb-10 text-sm">Hover over each category to see detailed technical capabilities.</p>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <!-- AWS Cloud Infrastructure -->
-        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+        <div class="interactive-card bg-white/5 p-6 rounded-lg border border-white/10">
           <h4 class="text-slate-light font-semibold mb-4 flex items-center">
             <i class="fab fa-aws text-accent-cyan text-xl mr-3 w-6 text-center"></i> AWS Cloud Infrastructure
           </h4>
           <div class="flex flex-wrap gap-2">
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EC2</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">VPC</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EKS</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ECS</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ECR</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">RDS</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ALB</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Auto Scaling</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">S3</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Route 53</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CloudFront</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ACM</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">IAM</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CloudWatch</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EC2 / VPC</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">EKS / ECS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">RDS / S3</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">ALB / Route 53</span>
+          </div>
+          <!-- Reveal on Hover -->
+          <div class="skill-details text-sm text-slate-400 border-t border-white/10 pt-3">
+            Architecting highly available architectures, managing custom VPC networking, load balancing traffic, and configuring secure IAM access policies across AWS services.
           </div>
         </div>
 
         <!-- DevOps & CI/CD -->
-        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+        <div class="interactive-card bg-white/5 p-6 rounded-lg border border-white/10">
           <h4 class="text-slate-light font-semibold mb-4 flex items-center">
             <i class="fas fa-infinity text-accent-cyan text-xl mr-3 w-6 text-center"></i> DevOps & CI/CD
           </h4>
           <div class="flex flex-wrap gap-2">
             <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Terraform (IaC)</span>
             <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">GitHub Actions</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Git & GitHub</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CI/CD Automation</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">CI/CD YAML</span>
+          </div>
+          <div class="skill-details text-sm text-slate-400 border-t border-white/10 pt-3">
+            Designing automated pipelines from code commit to production deployment. Managing repeatable infrastructure footprints using Terraform modules and remote state.
           </div>
         </div>
 
         <!-- Containerization & Orchestration -->
-        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+        <div class="interactive-card bg-white/5 p-6 rounded-lg border border-white/10">
           <h4 class="text-slate-light font-semibold mb-4 flex items-center">
             <i class="fab fa-docker text-accent-cyan text-xl mr-3 w-6 text-center"></i> Containerization
           </h4>
           <div class="flex flex-wrap gap-2">
             <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Docker</span>
             <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Kubernetes</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Amazon EKS</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Amazon ECS</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Amazon ECS / EKS</span>
+          </div>
+          <div class="skill-details text-sm text-slate-400 border-t border-white/10 pt-3">
+            Packaging applications into secure, lightweight containers. Orchestrating multi-node clusters, managing pod lifecycles, and troubleshooting container networking.
           </div>
         </div>
 
         <!-- Backend, DB & Monitoring -->
-        <div class="bg-navy-800/50 p-6 rounded-lg border border-navy-700">
+        <div class="interactive-card bg-white/5 p-6 rounded-lg border border-white/10">
           <h4 class="text-slate-light font-semibold mb-4 flex items-center">
             <i class="fas fa-server text-accent-cyan text-xl mr-3 w-6 text-center"></i> Backend & Data
           </h4>
           <div class="flex flex-wrap gap-2">
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Java</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Spring Boot</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Java / Spring Boot</span>
             <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">PostgreSQL</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">MySQL</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">MongoDB</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Prometheus</span>
-            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Grafana</span>
+            <span class="skill-badge px-3 py-1.5 bg-navy-900 text-slate rounded text-xs font-mono">Prometheus / Grafana</span>
+          </div>
+          <div class="skill-details text-sm text-slate-400 border-t border-white/10 pt-3">
+            Developing robust backend services and REST APIs, optimizing relational databases, and maintaining system observability through custom metrics and dashboards.
           </div>
         </div>
 
@@ -314,19 +294,19 @@
     <section id="experience" class="py-16 md:py-24 fade-in">
       <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
         <span class="text-accent-cyan font-mono text-xl mr-3">02.</span> Experience
-        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+        <span class="w-full h-[1px] bg-white/10 ml-6 relative top-1"></span>
       </h3>
 
-      <div class="relative border-l-2 border-navy-700 ml-3 md:ml-6 mt-8 space-y-12">
+      <div class="relative border-l border-white/20 ml-3 md:ml-6 mt-8 space-y-12">
         
         <!-- Job 1 -->
-        <div class="relative pl-8 md:pl-12 timeline-item">
-          <div class="timeline-dot absolute w-4 h-4 bg-navy-900 border-2 border-accent-cyan rounded-full -left-[9px] top-1"></div>
+        <div class="relative pl-8 md:pl-12 timeline-item interactive-card bg-transparent hover:bg-white/5 p-6 rounded-lg ml-2 border border-transparent">
+          <div class="timeline-dot absolute w-3 h-3 bg-[#080d1a] border-2 border-accent-cyan rounded-full -left-[32px] md:-left-[24px] top-7"></div>
           <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
             <h4 class="text-xl font-semibold text-slate-light">
               Associate Software Engineer <span class="text-accent-cyan">@ Anasol Consultancy</span>
             </h4>
-            <span class="font-mono text-sm text-slate-dark whitespace-nowrap mt-1 md:mt-0">01/2025 – Present</span>
+            <span class="font-mono text-sm text-slate-dark whitespace-nowrap mt-1 md:mt-0 px-3 py-1 rounded bg-accent-cyan/10 text-accent-cyan">01/2025 – Present</span>
           </div>
           <ul class="list-none space-y-3 mt-4 text-sm text-slate">
             <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
@@ -338,18 +318,12 @@
             <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
               Automate CI/CD workflows using GitHub Actions for Docker image builds, Amazon ECR publishing, and Amazon ECS application deployments.
             </li>
-            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
-              Containerise Spring Boot applications using Docker and configure ECS services, EC2 Auto Scaling, ALB routing, health checks, IAM roles.
-            </li>
-            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
-              Troubleshoot infrastructure, deployments, networking, and CI/CD pipelines using CloudWatch.
-            </li>
           </ul>
         </div>
 
         <!-- Job 2 -->
-        <div class="relative pl-8 md:pl-12 timeline-item">
-          <div class="timeline-dot absolute w-4 h-4 bg-navy-900 border-2 border-slate-dark rounded-full -left-[9px] top-1"></div>
+        <div class="relative pl-8 md:pl-12 timeline-item interactive-card bg-transparent hover:bg-white/5 p-6 rounded-lg ml-2 border border-transparent">
+          <div class="timeline-dot absolute w-3 h-3 bg-[#080d1a] border-2 border-slate-dark rounded-full -left-[32px] md:-left-[24px] top-7"></div>
           <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
             <h4 class="text-xl font-semibold text-slate-light">
               Software Engineer <span class="text-accent-cyan">@ Tanama Software</span>
@@ -366,9 +340,6 @@
             <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
               Designed database entities, repository layers, and business logic to support enterprise application requirements.
             </li>
-            <li class="relative pl-6 before:content-['▹'] before:absolute before:left-0 before:text-accent-cyan before:text-lg before:leading-none">
-              Debugged issues, optimised SQL queries, and improved application performance and reliability in an Agile/Scrum environment.
-            </li>
           </ul>
         </div>
 
@@ -379,18 +350,19 @@
     <section id="projects" class="py-16 md:py-24 fade-in">
       <h3 class="flex items-center text-2xl md:text-3xl font-bold text-slate-light mb-10 whitespace-nowrap">
         <span class="text-accent-cyan font-mono text-xl mr-3">03.</span> Featured Projects
-        <span class="w-full h-[1px] bg-navy-700 ml-6 relative top-1"></span>
+        <span class="w-full h-[1px] bg-white/10 ml-6 relative top-1"></span>
       </h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
         
         <!-- Project 1 -->
-        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+        <div class="interactive-card bg-white/5 rounded-lg p-6 border border-white/10 flex flex-col h-full z-10">
           <div class="flex justify-between items-center mb-6">
-            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+            <i class="fas fa-folder-open text-4xl text-accent-cyan opacity-80"></i>
+            <span class="text-xs font-mono px-2 py-1 bg-accent-cyan/10 text-accent-cyan rounded">Portfolio Build</span>
           </div>
-          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">SVMart</h4>
-          <p class="text-xs font-mono text-accent-cyan mb-3">Cloud-Native Quick-Commerce & DevOps Automation</p>
+          <h4 class="text-xl font-bold text-slate-light mb-3">SVMart</h4>
+          <p class="text-xs font-mono text-slate-light opacity-60 mb-3">Cloud-Native Quick-Commerce & DevOps</p>
           <p class="text-sm text-slate mb-6 flex-grow">
             Designed AWS infrastructure using Terraform (VPC, EC2 ASG, ECS, ALB, RDS). Implemented GitHub Actions CI/CD to build Docker images, publish to ECR, and deploy to ECS. Configured Route 53, ACM, and CloudFront.
           </p>
@@ -400,12 +372,13 @@
         </div>
 
         <!-- Project 2 -->
-        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
+        <div class="interactive-card bg-white/5 rounded-lg p-6 border border-white/10 flex flex-col h-full z-10">
           <div class="flex justify-between items-center mb-6">
-            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
+            <i class="fas fa-folder-open text-4xl text-accent-cyan opacity-80"></i>
+            <span class="text-xs font-mono px-2 py-1 bg-accent-cyan/10 text-accent-cyan rounded">Portfolio Build</span>
           </div>
-          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">Zufeto</h4>
-          <p class="text-xs font-mono text-accent-cyan mb-3">Cloud-Native AWS ECS Deployment & CI/CD</p>
+          <h4 class="text-xl font-bold text-slate-light mb-3">Zufeto</h4>
+          <p class="text-xs font-mono text-slate-light opacity-60 mb-3">Cloud-Native AWS ECS Deployment & CI/CD</p>
           <p class="text-sm text-slate mb-6 flex-grow">
             Containerised Spring Boot monolith using Docker. Provisioned VPC, ECS, ALB, and RDS using Terraform. Automated deployments via GitHub Actions to ECR and ECS. Managed domain routing and SSL via Route 53/ACM.
           </p>
@@ -414,90 +387,13 @@
           </ul>
         </div>
 
-        <!-- Project 3 -->
-        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
-          <div class="flex justify-between items-center mb-6">
-            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
-          </div>
-          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">Wellbeing</h4>
-          <p class="text-xs font-mono text-accent-cyan mb-3">Healthcare & Wellness Platform Deployment</p>
-          <p class="text-sm text-slate mb-6 flex-grow">
-            Provisioned infrastructure (VPC, ECS, EC2, RDS, ALB) using Terraform. Automated Docker build and ECR publishing via GitHub Actions. Configured CloudWatch monitoring and troubleshot networking & runtime issues.
-          </p>
-          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
-            <li>Java</li><li>Docker</li><li>Terraform</li><li>AWS ECS</li><li>CloudWatch</li>
-          </ul>
-        </div>
-
-        <!-- Project 4 -->
-        <div class="project-card bg-navy-800 rounded-lg p-6 border border-navy-700 flex flex-col h-full relative z-10">
-          <div class="flex justify-between items-center mb-6">
-            <i class="fas fa-folder-open text-4xl text-accent-cyan"></i>
-          </div>
-          <h4 class="text-xl font-bold text-slate-light mb-3 group-hover:text-accent-cyan">JJR Organics</h4>
-          <p class="text-xs font-mono text-accent-cyan mb-3">E-Commerce Platform Backend</p>
-          <p class="text-sm text-slate mb-6 flex-grow">
-            Developed a robust Spring Boot e-commerce backend with RESTful APIs for cart and order management. Implemented database integration using Spring Data JPA/Hibernate and secured APIs with Spring Security (RBAC).
-          </p>
-          <ul class="flex flex-wrap gap-3 font-mono text-[11px] text-slate-dark mt-auto">
-            <li>Java</li><li>Spring Boot</li><li>Spring Security</li><li>JPA/Hibernate</li><li>PostgreSQL</li>
-          </ul>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Education & Certifications Section -->
-    <section id="edu-certs" class="py-16 md:py-24 fade-in">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        
-        <!-- Education -->
-        <div>
-          <h3 class="flex items-center text-2xl font-bold text-slate-light mb-8 whitespace-nowrap">
-            <span class="text-accent-cyan font-mono text-xl mr-3">04.</span> Education
-          </h3>
-          <div class="relative pl-6 border-l border-navy-700">
-            <div class="absolute w-3 h-3 bg-navy-900 border-2 border-accent-cyan rounded-full -left-[6px] top-1"></div>
-            <h4 class="text-lg font-semibold text-slate-light">B.Tech in Computer Science and Engineering</h4>
-            <p class="text-sm text-slate mt-1">Aurora's Scientific, Technological and Research Academy</p>
-            <p class="text-xs font-mono text-slate-dark mt-2">2015 – 2019 | Hyderabad, India</p>
-          </div>
-        </div>
-
-        <!-- Certifications -->
-        <div>
-          <h3 class="flex items-center text-2xl font-bold text-slate-light mb-8 whitespace-nowrap">
-            <span class="text-accent-cyan font-mono text-xl mr-3">05.</span> Certifications
-          </h3>
-          <ul class="space-y-6">
-            <li class="bg-navy-800/50 p-4 rounded-lg border border-navy-700 flex items-start">
-              <i class="fab fa-aws text-accent-cyan text-3xl mr-4 mt-1"></i>
-              <div>
-                <h4 class="text-base font-semibold text-slate-light">AWS Certified Solutions Architect – Associate</h4>
-                <p class="text-sm text-slate mt-1">Amazon Web Services (AWS)</p>
-              </div>
-            </li>
-            <li class="bg-navy-800/50 p-4 rounded-lg border border-navy-700 flex items-start">
-              <i class="fab fa-windows text-blue-400 text-3xl mr-4 mt-1"></i>
-              <div>
-                <h4 class="text-base font-semibold text-slate-light">Microsoft Certified: AWS Fundamentals</h4>
-                <p class="text-sm text-slate mt-1">Microsoft</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 text-center text-sm font-mono text-slate-dark flex flex-col items-center">
+    <footer class="py-8 text-center text-sm font-mono text-slate-dark flex flex-col items-center mt-12 border-t border-white/10">
       <div class="mb-4">
-        Built with <i class="fas fa-heart text-accent-cyan mx-1"></i> by Sandeep Konda
-      </div>
-      <div class="flex gap-4">
-        <span class="text-xs border border-navy-700 px-2 py-1 rounded">English - Fluent</span>
-        <span class="text-xs border border-navy-700 px-2 py-1 rounded">Telugu - Native</span>
+        Built with <i class="fas fa-terminal text-accent-cyan mx-1"></i> by Sandeep Konda
       </div>
     </footer>
 
@@ -513,15 +409,22 @@
       };
 
       const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
+        entries.forEach((entry, index) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target); // Stop observing once it's visible
+            // Add a slight stagger effect based on index if multiple items appear at once
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, index * 100);
+            observer.unobserve(entry.target); 
           }
         });
       }, observerOptions);
 
-      document.querySelectorAll('.fade-in').forEach(element => {
+      document.querySelectorAll('.fade-in, .interactive-card').forEach(element => {
+        // Ensure interactive cards also get the fade-in base class for unified scrolling animations
+        if(!element.classList.contains('fade-in')) {
+          element.classList.add('fade-in');
+        }
         observer.observe(element);
       });
     });
