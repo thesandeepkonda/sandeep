@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { useInView } from "../../hooks/useInView"
 import { ArrowRight, Terminal, Cloud, Code2 } from "lucide-react"
 import TechText from "../../components/sections/TechText"
+import Scanner from "./Scanner"
 
 const journey = [
   "Java Backend",
@@ -37,11 +38,58 @@ export default function About() {
   }
 
   return (
-    <section id="about" className="py-24 bg-white relative overflow-hidden">
-      {/* Subtle background decoration */}
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[500px] h-[500px] bg-sky-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+    <section
+      id="about"
+      className="py-24 relative overflow-hidden"
+      style={{ background: "#020617" }}
+    >
+      {/* ── Scanner background ─────────────────────────────────────── */}
+      <div className="absolute inset-0 z-0">
+        <Scanner
+          color1="#5227FF"
+          color2="#FF9FFC"
+          color3="#FFFFFF"
+          speed={0.5}
+          sweepSpeed={0.25}
+          sweepWidth={1.6}
+          trail={0.5}
+          ripple={0.22}
+          bandDensity={11}
+          glow={0.6}
+          scanDirection="vertical"
+          colorSpread={0.7}
+          scanline
+          scanlineIntensity={0.5}
+          mouseInteraction
+          clickEffect="ping"
+          reverse={false}
+          scale={1.5}
+          frequency={2}
+          lineWidth={1.2}
+          brightness={1}
+          vignette={0.3}
+          grain
+          grainIntensity={0.04}
+          opacity={1}
+          mouseMode="repel"
+          mouseRadius={0.5}
+          mouseStrength={0.7}
+          intro
+          lightMode={false}
+        />
+      </div>
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      {/* Dark vignette — keeps text legible over the bright scan */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 45%, rgba(2,6,23,0.55) 0%, rgba(2,6,23,0.8) 55%, rgba(2,6,23,0.95) 100%)",
+        }}
+      />
+
+      {/* ── Content ─────────────────────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-6 relative z-10 pointer-events-none">
         <div
           ref={ref as React.RefObject<HTMLDivElement>}
           className="grid lg:grid-cols-2 gap-16 items-start"
@@ -51,16 +99,17 @@ export default function About() {
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-auto"
           >
             <div className="flex items-center gap-3 mb-4">
               <motion.div
                 initial={{ width: 0 }}
                 animate={isInView ? { width: 32 } : {}}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="h-px bg-sky-500"
+                className="h-px bg-sky-400"
               />
               <span
-                className="text-xs font-semibold text-sky-600 tracking-[0.18em] uppercase"
+                className="text-xs font-semibold text-sky-400 tracking-[0.18em] uppercase"
                 style={{ fontFamily: "JetBrains Mono, monospace" }}
               >
                 About Me
@@ -69,7 +118,7 @@ export default function About() {
 
             {/* Animated interactive name — tightened container so no gap */}
             <div className="mb-4">
-              <div className="w-full h-[95px] md:h-[115px] relative text-sky-600">
+              <div className="w-full h-[95px] md:h-[115px] relative text-sky-400">
                 <TechText
                   text="Sandeep Konda"
                   fontWeight={700}
@@ -100,12 +149,12 @@ export default function About() {
                 />
               </div>
 
-              <p className="text-slate-600 text-2xl lg:text-3xl font-semibold -mt-2">
+              <p className="text-slate-200 text-2xl lg:text-3xl font-semibold -mt-2">
                 Passionate about{" "}
-                <span className="text-sky-600 relative inline-block">
+                <span className="text-sky-400 relative inline-block">
                   AWS Cloud, DevOps, and automation.
                   <motion.span
-                    className="absolute bottom-0 left-0 w-full h-1 bg-sky-200/60 rounded"
+                    className="absolute bottom-0 left-0 w-full h-1 bg-sky-400/40 rounded"
                     initial={{ scaleX: 0, originX: 0 }}
                     animate={isInView ? { scaleX: 1 } : {}}
                     transition={{ delay: 0.5, duration: 0.6 }}
@@ -114,7 +163,7 @@ export default function About() {
               </p>
             </div>
 
-            <div className="space-y-4 text-slate-600 leading-relaxed text-[0.95rem]">
+            <div className="space-y-4 text-slate-300 leading-relaxed text-[0.95rem]">
               <p>
                 Based in Hyderabad, I currently work as an Associate Software Engineer at Anasol Consultancy Services, focusing on managing and provisioning scalable AWS infrastructure.
               </p>
@@ -128,7 +177,7 @@ export default function About() {
 
             {/* Image Box with Floating Animation */}
             <motion.figure
-              className="relative mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-lg group"
+              className="relative mt-10 overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-2xl shadow-purple-500/10 group"
               whileHover={{ y: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
@@ -174,7 +223,7 @@ export default function About() {
                     className={`text-sm font-medium px-3 py-1.5 rounded-full border transition-all duration-300 hover:shadow-md ${
                       i === journey.length - 1
                         ? "bg-sky-500 text-white border-sky-500 shadow-sky-500/20"
-                        : "bg-slate-50 text-slate-600 border-slate-200 hover:border-sky-300"
+                        : "bg-slate-900/60 backdrop-blur-sm text-slate-300 border-white/10 hover:border-sky-400/50"
                     }`}
                   >
                     {step}
@@ -184,7 +233,7 @@ export default function About() {
                       animate={{ x: [0, 3, 0] }}
                       transition={{ repeat: Infinity, duration: 2, delay: i * 0.2 }}
                     >
-                      <ArrowRight size={12} className="text-slate-300 flex-shrink-0" />
+                      <ArrowRight size={12} className="text-slate-600 flex-shrink-0" />
                     </motion.div>
                   )}
                 </motion.div>
@@ -197,7 +246,7 @@ export default function About() {
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="lg:mt-4"
+            className="lg:mt-4 pointer-events-auto"
           >
             <h3
               className="text-xs font-semibold text-slate-400 mb-6 uppercase tracking-widest flex items-center gap-2"
@@ -213,16 +262,16 @@ export default function About() {
                   variants={itemVariants}
                   whileHover={{
                     scale: 1.02,
-                    backgroundColor: "rgba(240, 249, 255, 0.5)",
-                    borderColor: "rgba(125, 211, 252, 0.8)",
+                    backgroundColor: "rgba(82, 39, 255, 0.12)",
+                    borderColor: "rgba(255, 159, 252, 0.5)",
                   }}
-                  className="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-white shadow-sm transition-all duration-200 group cursor-default relative overflow-hidden"
+                  className="flex items-start gap-3 p-4 rounded-xl border border-white/8 bg-slate-900/50 backdrop-blur-sm shadow-sm transition-all duration-200 group cursor-default relative overflow-hidden"
                 >
                   {/* Subtle hover background highlight */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky-50/0 via-sky-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                  <div className="mt-1 w-2 h-2 rounded-full bg-sky-400 flex-shrink-0 group-hover:scale-150 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300 relative z-10" />
-                  <span className="text-sm text-slate-700 font-medium relative z-10">{item}</span>
+                  <div className="mt-1 w-2 h-2 rounded-full bg-purple-400 flex-shrink-0 group-hover:scale-150 group-hover:shadow-[0_0_8px_rgba(168,85,247,0.8)] transition-all duration-300 relative z-10" />
+                  <span className="text-sm text-slate-200 font-medium relative z-10">{item}</span>
                 </motion.div>
               ))}
             </div>
